@@ -1,6 +1,6 @@
 homepage: 'https://stape.io/'
 versions:
-  - sha: 957ffde0e725fc08cb0a3c8125eb23577ea6ee32
+  - sha: bbbb25c8a0b558f9e32c69a626f9c10ccb24f03a
     changeNotes: Revamped the tag for Conversions API support. Added tests.
   - sha: 31d43401c0a45f248ff8b20c4669355bb3a9c994
     changeNotes: Initial release.

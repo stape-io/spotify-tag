@@ -1,5 +1,7 @@
 homepage: 'https://stape.io/'
 versions:
+  - sha: b78624a4390641f4d5ce8f9b91d119c0d5a7536a
+    changeNotes: Renamed the template. Improved tests.
   - sha: bbbb25c8a0b558f9e32c69a626f9c10ccb24f03a
     changeNotes: Revamped the tag for Conversions API support. Added tests.
   - sha: 31d43401c0a45f248ff8b20c4669355bb3a9c994

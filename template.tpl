@@ -13,7 +13,7 @@ ___INFO___
   "id": "cvt_temp_public_id",
   "version": 1,
   "securityGroups": [],
-  "displayName": "Spotify Conversions API",
+  "displayName": "Spotify Conversions API by Stape",
   "categories": [
     "ADVERTISING",
     "ANALYTICS",
@@ -972,7 +972,7 @@ function sendRequest(mappedData) {
         ResponseBody: body
       });
 
-      if (!data.useOptimisticScenario) {
+      if (!useOptimisticScenario) {
         if (statusCode >= 200 && statusCode < 300) {
           data.gtmOnSuccess();
         } else {
@@ -1843,50 +1843,59 @@ scenarios:
     \ = true;\nmock('getContainerVersion', () => {\n  return {\n    debugMode: expectedDebugMode\n\
     \  };\n}); \n\nmock('logToConsole', (logData) => {\n  const parsedLogData = JSON.parse(logData);\n\
     \  requiredConsoleKeys.forEach(p => assertThat(parsedLogData[p]).isDefined());\n\
-    });\n\nmock('sendHttpRequest', (requestUrl, requestOptions, requestBody) => {\n\
-    \  return {\n    then: (callback) => { \n      callback({ statusCode: 200 });\n\
-    \      return {\n        then: () => {},\n        catch: () => {}\n      };\n\
-    \    },\n    catch: (callback) => callback()\n  };\n});\n\nrunCode(mockData);\n\
-    \nassertApi('logToConsole').wasCalled();\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\nmock('gtmOnSuccess', () => assertThat(true).isTrue());\n\
-    mock('gtmOnFailure', () => fail('gtmOnFailure should not have been called'));"
+    });\n\nrunCode(mockData);\n\nassertApi('logToConsole').wasCalled();\nassertApi('gtmOnSuccess').wasCalled();\n\
+    assertApi('gtmOnFailure').wasNotCalled();"
 - name: Should log to console, if the 'Log during debug and preview' option is selected
     AND is on preview mode
-  code: "setGetAllEventData();\nmockData.logType = 'debug';\n\nconst expectedDebugMode\
-    \ = true;\nmock('getContainerVersion', () => {\n  return {\n    debugMode: expectedDebugMode\n\
-    \  };\n});\n\nmock('logToConsole', (logData) => {\n  const parsedLogData = JSON.parse(logData);\n\
-    \  requiredConsoleKeys.forEach(p => assertThat(parsedLogData[p]).isDefined());\n\
-    });\n\nmock('sendHttpRequest', (requestUrl, requestOptions, requestBody) => {\n\
-    \  return {\n    then: (callback) => { \n      callback({ statusCode: 200 });\n\
-    \      return {\n        then: () => {},\n        catch: () => {}\n      };\n\
-    \    },\n    catch: (callback) => callback()\n  };\n});\n\nrunCode(mockData);\n\
-    \nassertApi('logToConsole').wasCalled();\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\nmock('gtmOnSuccess', () => assertThat(true).isTrue());\n\
-    mock('gtmOnFailure', () => fail('gtmOnFailure should not have been called'));"
+  code: |-
+    setGetAllEventData();
+    mockData.logType = 'debug';
+
+    const expectedDebugMode = true;
+    mock('getContainerVersion', () => {
+      return {
+        debugMode: expectedDebugMode
+      };
+    });
+
+    mock('logToConsole', (logData) => {
+      const parsedLogData = JSON.parse(logData);
+      requiredConsoleKeys.forEach(p => assertThat(parsedLogData[p]).isDefined());
+    });
+
+    runCode(mockData);
+
+    assertApi('logToConsole').wasCalled();
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
 - name: Should NOT log to console, if the 'Log during debug and preview' option is
     selected AND is NOT on preview mode
-  code: "setGetAllEventData();\nmockData.logType = 'debug';\n\nconst expectedDebugMode\
-    \ = false;\nmock('getContainerVersion', () => {\n  return {\n    debugMode: expectedDebugMode\n\
-    \  };\n});\n\nmock('sendHttpRequest', (requestUrl, requestOptions, requestBody)\
-    \ => {\n  return {\n    then: (callback) => { \n      callback({ statusCode: 200\
-    \ });\n      return {\n        then: () => {},\n        catch: () => {}\n    \
-    \  };\n    },\n    catch: (callback) => callback()\n  };\n});\n\nrunCode(mockData);\n\
-    \nassertApi('logToConsole').wasNotCalled();\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\nmock('gtmOnSuccess', () => assertThat(true).isTrue());\n\
-    mock('gtmOnFailure', () => fail('gtmOnFailure should not have been called'));"
+  code: |-
+    setGetAllEventData();
+    mockData.logType = 'debug';
+
+    const expectedDebugMode = false;
+    mock('getContainerVersion', () => {
+      return {
+        debugMode: expectedDebugMode
+      };
+    });
+
+    runCode(mockData);
+
+    assertApi('logToConsole').wasNotCalled();
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
 - name: Should NOT log to console, if the 'Do not log' option is selected
-  code: "setGetAllEventData();\nmockData.logType = 'no';\n\nmock('sendHttpRequest',\
-    \ (requestUrl, requestOptions, requestBody) => {\n  return {\n    then: (callback)\
-    \ => { \n      callback({ statusCode: 200 });\n      return {\n        then: ()\
-    \ => {},\n        catch: () => {}\n      };\n    },\n    catch: (callback) =>\
-    \ callback()\n  };\n});\n\nrunCode(mockData);\n\nassertApi('logToConsole').wasNotCalled();\n\
-    // Workaround because assertApi('gtmOn*').wasCalled() doesn't work for some reason.\n\
-    // Workaround because assertApi('gtmOn*').wasCalled() doesn't work for some reason.\n\
-    mock('gtmOnSuccess', () => assertThat(true).isTrue());\nmock('gtmOnFailure', ()\
-    \ => fail('gtmOnFailure should not have been called'));"
+  code: |-
+    setGetAllEventData();
+    mockData.logType = 'no';
+
+    runCode(mockData);
+
+    assertApi('logToConsole').wasNotCalled();
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
 - name: Should log to BQ, if the 'Log to BigQuery' option is selected
   code: "setGetAllEventData();\nmockData.bigQueryLogType = 'always';\n\n// assertApi\
     \ doesn't work for 'BigQuery.insert()'.\n// Ref: https://gtm-gear.com/posts/gtm-templates-testing/\n\
@@ -1894,175 +1903,79 @@ scenarios:
     \ => { \n      assertThat(connectionInfo).isDefined();\n      assertThat(rows).isArray();\n\
     \      assertThat(rows).hasLength(1);\n      requiredBqKeys.forEach(p => assertThat(rows[0][p]).isDefined());\n\
     \      assertThat(options).isEqualTo(expectedBqOptions);\n      return Promise.create((resolve,\
-    \ reject) => {\n        resolve();\n      });\n    }\n  };\n});\n\nmock('sendHttpRequest',\
-    \ (requestUrl, requestOptions, requestBody) => {\n  return {\n    then: (callback)\
-    \ => { \n      callback({ statusCode: 200 });\n      return {\n        then: ()\
-    \ => {},\n        catch: () => {}\n      };\n    },\n    catch: (callback) =>\
-    \ callback()\n  };\n});\n\nrunCode(mockData);\n\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\n// Workaround because assertApi('gtmOn*').wasCalled()\
-    \ doesn't work for some reason.\nmock('gtmOnSuccess', () => assertThat(true).isTrue());\n\
-    mock('gtmOnFailure', () => fail('gtmOnFailure should not have been called'));"
+    \ reject) => {\n        resolve();\n      });\n    }\n  };\n});\n\nrunCode(mockData);\n\
+    \nassertApi('gtmOnSuccess').wasCalled();\nassertApi('gtmOnFailure').wasNotCalled();"
 - name: Should NOT log to BQ, if the 'Do not log to BigQuery' option is selected
   code: "setGetAllEventData();\nmockData.bigQueryLogType = 'no';\n\n// assertApi doesn't\
     \ work for 'BigQuery.insert()'.\n// Ref: https://gtm-gear.com/posts/gtm-templates-testing/\n\
     mock('BigQuery', () => {\n  return { \n    insert: (connectionInfo, rows, options)\
     \ => { \n      fail('BigQuery.insert should not have been called.');\n      return\
     \ Promise.create((resolve, reject) => {\n        resolve();\n      });\n    }\n\
-    \  };\n});\n\nmock('sendHttpRequest', (requestUrl, requestOptions, requestBody)\
-    \ => {\n  return {\n    then: (callback) => { \n      callback({ statusCode: 200\
-    \ });\n      return {\n        then: () => {},\n        catch: () => {}\n    \
-    \  };\n    },\n    catch: (callback) => callback()\n  };\n});\n\nrunCode(mockData);\n\
-    \n// Workaround because assertApi('gtmOn*').wasCalled() doesn't work for some\
-    \ reason.\n// Workaround because assertApi('gtmOn*').wasCalled() doesn't work\
-    \ for some reason.\nmock('gtmOnSuccess', () => assertThat(true).isTrue());\nmock('gtmOnFailure',\
-    \ () => fail('gtmOnFailure should not have been called'));"
-setup: |-
-  const JSON = require('JSON');
-  const Promise = require('Promise');
-  const makeInteger = require('makeInteger');
-
-  const mergeObj = (target, source) => {
-    for (const key in source) {
-      if (source.hasOwnProperty(key)) target[key] = source[key];
-    }
-    return target;
-  };
-
-  const setGetAllEventData = (objToBeMerged) => {
-    mock('getAllEventData', mergeObj({
-      'x-ga-protocol_version': '2',
-      'x-ga-measurement_id': 'G-123ABC',
-      'x-ga-gtm_version': '45je55e1za200',
-      'x-ga-page_id': 1747422523211,
-      'x-ga-gcd': '13l3l3l3l1l1',
-      'x-ga-npa': '0',
-      'x-ga-dma': '0',
-      'x-ga-mp2-tag_exp':
-        '101509157~103116025~103130498~103130500~103136993~103136995~103200001~103207802~103211513~103233427~103252644~103252646~103263073~103301114~103301116',
-      client_id: 'AUJctU7H7hBB/aMuhE4pKwGu5DWDdklg5abyyyn8i/I=.1747154479',
-      'x-ga-ecid': '1294673677',
-      language: 'en-us',
-      screen_resolution: '1512x982',
-      event_location: { country: 'BR', region: 'SP' },
-      event_id: '101509157~103116025~103130498',
-      timestamp: 1748377016,
-      client_hints: {
-        architecture: 'arm',
-        bitness: '64',
-        full_version_list: [
-          { brand: 'Chromium', version: '136.0.7103.93' },
-          { brand: 'Google Chrome', version: '136.0.7103.93' },
-          { brand: 'Not.A/Brand', version: '99.0.0.0' }
-        ],
-        mobile: false,
-        model: '',
-        platform: 'macOS',
-        platform_version: '15.2.0',
-        wow64: false,
-        brands: [
-          { brand: 'Chromium', version: '136' },
-          { brand: 'Google Chrome', version: '136' },
-          { brand: 'Not.A/Brand', version: '99' }
-        ]
-      },
-      'x-ga-are': '1',
-      'x-ga-mp2-frm': '0',
-      'x-ga-pscdl': 'noapi',
-      'x-ga-system_properties': { eu: [34], tu: 'BA', ss: '1', ee: true },
-      'x-sst-system_properties': {
-        etld: 'google.com.br',
-        tft: '1747422523211',
-        lpc: '60493049',
-        navt: 'r',
-        ude: '0',
-        sw_exp: '1',
-        request_start_time_ms: 1747422524851
-      },
-      'x-ga-request_count': 1,
-      ga_session_id: '1747422523',
-      ga_session_number: 3,
-      'x-ga-mp2-seg': '0',
-      page_location: 'https://example.com/?test=1i23i21j3',
-      page_title: 'Example Domain',
-      event_name: 'page_view',
-      'x-ga-tfd': 5784,
-      ip_override: '2804:14d:c096:8dd6:311c:8c00:e6c:e33',
-      user_agent:
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-      value: 123.45,
-      currency: 'BRL',
-      user_data: {
-        email: { 0: 'test1@example.com', 1: 'test2@example.net' },
-        phone_number: '+55 (19) 99999-9999'
-      }
-    }, objToBeMerged || {}));
-  };
-
-  const expectedBigQuerySettings = {
-    logBigQueryProjectId: 'logBigQueryProjectId',
-    logBigQueryDatasetId: 'logBigQueryDatasetId',
-    logBigQueryTableId: 'logBigQueryTableId'
-  };
-
-  const requiredConsoleKeys = ['Type', 'TraceId', 'Name'];
-  const requiredBqKeys = ['timestamp', 'type', 'trace_id', 'tag_name'];
-  const expectedBqOptions = { ignoreUnknownValues: true };
-
-  const expectedEventName = 'Page_View';
-  const expectedConnectionId = 'expectedConnectionId';
-  const expectedAuthToken = 'expectedAuthToken';
-  const expectedActionSource = 'WEB';
-
-  const mockData = {
-    connectionId: expectedConnectionId,
-    authToken: expectedAuthToken,
-    eventType: 'standard',
-    eventNameStandard: expectedEventName,
-    actionSource: expectedActionSource,
-    logBigQueryProjectId: expectedBigQuerySettings.logBigQueryProjectId,
-    logBigQueryDatasetId: expectedBigQuerySettings.logBigQueryDatasetId,
-    logBigQueryTableId: expectedBigQuerySettings.logBigQueryTableId,
-  };
-
-  const setAllMockData = (objToBeMerged) => {
-    mergeObj(mockData, {
-      adStorageConsent: 'optional',
-      logType: 'debug',
-      eventNameStandard: 'Page_View',
-      deviceIdCookieHttpOnly: false,
-      optOutTargeting: true,
-      generateDeviceIdCookie: true,
-      deviceIdCookieExpiration: '365',
-      eventType: 'standard',
-      eventDetailsParametersList: [
-        { name: 'amount', value: '123' },
-        { name: 'currency', value: 'BRL' },
-        { name: 'content_name', value: 'foobar' },
-        { name: 'content_category', value: '2271' }
-      ],
-      actionSource: 'WEB',
-      useOptimisticScenario: false,
-      bigQueryLogType: 'no',
-      serverEventDataList: [
-        { name: 'event_time', value: '1748369212323' },
-        { name: 'event_id', value: 'foobar' },
-        { name: 'event_source_url', value: 'https://example.com' }
-      ],
-      deviceIdCookieDomain: 'auto',
-      userDataParametersList: [
-        { name: 'ip_address', value: '1.1.1.1' },
-        { name: 'device_id', value: 'foobar' },
-        { name: 'hashed_emails', value: 'test@example.com' },
-        { name: 'hashed_phone_number', value: '+55 19 9-9999-9999' }
-      ]
-    }, objToBeMerged || {});
-  };
-
-  mock('getRequestHeader', (header) => {
-    if (header === 'trace-id') return 'expectedTraceId';
-  });
-
-  mock('getTimestampMillis', 1747945830456);
+    \  };\n});\n\nrunCode(mockData);\n\nassertApi('gtmOnSuccess').wasCalled();\nassertApi('gtmOnFailure').wasNotCalled();"
+setup: "const JSON = require('JSON');\nconst Promise = require('Promise');\nconst\
+  \ makeInteger = require('makeInteger');\n\nconst mergeObj = (target, source) =>\
+  \ {\n  for (const key in source) {\n    if (source.hasOwnProperty(key)) target[key]\
+  \ = source[key];\n  }\n  return target;\n};\n\nconst setGetAllEventData = (objToBeMerged)\
+  \ => {\n  mock('getAllEventData', mergeObj({\n    'x-ga-protocol_version': '2',\n\
+  \    'x-ga-measurement_id': 'G-123ABC',\n    'x-ga-gtm_version': '45je55e1za200',\n\
+  \    'x-ga-page_id': 1747422523211,\n    'x-ga-gcd': '13l3l3l3l1l1',\n    'x-ga-npa':\
+  \ '0',\n    'x-ga-dma': '0',\n    'x-ga-mp2-tag_exp':\n      '101509157~103116025~103130498~103130500~103136993~103136995~103200001~103207802~103211513~103233427~103252644~103252646~103263073~103301114~103301116',\n\
+  \    client_id: 'AUJctU7H7hBB/aMuhE4pKwGu5DWDdklg5abyyyn8i/I=.1747154479',\n   \
+  \ 'x-ga-ecid': '1294673677',\n    language: 'en-us',\n    screen_resolution: '1512x982',\n\
+  \    event_location: { country: 'BR', region: 'SP' },\n    event_id: '101509157~103116025~103130498',\n\
+  \    timestamp: 1748377016,\n    client_hints: {\n      architecture: 'arm',\n \
+  \     bitness: '64',\n      full_version_list: [\n        { brand: 'Chromium', version:\
+  \ '136.0.7103.93' },\n        { brand: 'Google Chrome', version: '136.0.7103.93'\
+  \ },\n        { brand: 'Not.A/Brand', version: '99.0.0.0' }\n      ],\n      mobile:\
+  \ false,\n      model: '',\n      platform: 'macOS',\n      platform_version: '15.2.0',\n\
+  \      wow64: false,\n      brands: [\n        { brand: 'Chromium', version: '136'\
+  \ },\n        { brand: 'Google Chrome', version: '136' },\n        { brand: 'Not.A/Brand',\
+  \ version: '99' }\n      ]\n    },\n    'x-ga-are': '1',\n    'x-ga-mp2-frm': '0',\n\
+  \    'x-ga-pscdl': 'noapi',\n    'x-ga-system_properties': { eu: [34], tu: 'BA',\
+  \ ss: '1', ee: true },\n    'x-sst-system_properties': {\n      etld: 'google.com.br',\n\
+  \      tft: '1747422523211',\n      lpc: '60493049',\n      navt: 'r',\n      ude:\
+  \ '0',\n      sw_exp: '1',\n      request_start_time_ms: 1747422524851\n    },\n\
+  \    'x-ga-request_count': 1,\n    ga_session_id: '1747422523',\n    ga_session_number:\
+  \ 3,\n    'x-ga-mp2-seg': '0',\n    page_location: 'https://example.com/?test=1i23i21j3',\n\
+  \    page_title: 'Example Domain',\n    event_name: 'page_view',\n    'x-ga-tfd':\
+  \ 5784,\n    ip_override: '2804:14d:c096:8dd6:311c:8c00:e6c:e33',\n    user_agent:\n\
+  \      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,\
+  \ like Gecko) Chrome/136.0.0.0 Safari/537.36',\n    value: 123.45,\n    currency:\
+  \ 'BRL',\n    user_data: {\n      email: { 0: 'test1@example.com', 1: 'test2@example.net'\
+  \ },\n      phone_number: '+55 (19) 99999-9999'\n    }\n  }, objToBeMerged || {}));\n\
+  };\n\nconst expectedBigQuerySettings = {\n  logBigQueryProjectId: 'logBigQueryProjectId',\n\
+  \  logBigQueryDatasetId: 'logBigQueryDatasetId',\n  logBigQueryTableId: 'logBigQueryTableId'\n\
+  };\n\nconst requiredConsoleKeys = ['Type', 'TraceId', 'Name'];\nconst requiredBqKeys\
+  \ = ['timestamp', 'type', 'trace_id', 'tag_name'];\nconst expectedBqOptions = {\
+  \ ignoreUnknownValues: true };\n\nconst expectedEventName = 'Page_View';\nconst\
+  \ expectedConnectionId = 'expectedConnectionId';\nconst expectedAuthToken = 'expectedAuthToken';\n\
+  const expectedActionSource = 'WEB';\n\nconst mockData = {\n  connectionId: expectedConnectionId,\n\
+  \  authToken: expectedAuthToken,\n  eventType: 'standard',\n  eventNameStandard:\
+  \ expectedEventName,\n  actionSource: expectedActionSource,\n  logBigQueryProjectId:\
+  \ expectedBigQuerySettings.logBigQueryProjectId,\n  logBigQueryDatasetId: expectedBigQuerySettings.logBigQueryDatasetId,\n\
+  \  logBigQueryTableId: expectedBigQuerySettings.logBigQueryTableId,\n};\n\nconst\
+  \ setAllMockData = (objToBeMerged) => {\n  mergeObj(mockData, \n    mergeObj({\n\
+  \      adStorageConsent: 'optional',\n      logType: 'debug',\n      eventNameStandard:\
+  \ 'Page_View',\n      deviceIdCookieHttpOnly: false,\n      optOutTargeting: true,\n\
+  \      generateDeviceIdCookie: true,\n      deviceIdCookieExpiration: '365',\n \
+  \     eventType: 'standard',\n      eventDetailsParametersList: [\n        { name:\
+  \ 'amount', value: '123' },\n        { name: 'currency', value: 'BRL' },\n     \
+  \   { name: 'content_name', value: 'foobar' },\n        { name: 'content_category',\
+  \ value: '2271' }\n      ],\n      actionSource: 'WEB',\n      useOptimisticScenario:\
+  \ false,\n      bigQueryLogType: 'no',\n      serverEventDataList: [\n        {\
+  \ name: 'event_time', value: '1748369212323' },\n        { name: 'event_id', value:\
+  \ 'foobar' },\n        { name: 'event_source_url', value: 'https://example.com'\
+  \ }\n      ],\n      deviceIdCookieDomain: 'auto',\n      userDataParametersList:\
+  \ [\n        { name: 'ip_address', value: '1.1.1.1' },\n        { name: 'device_id',\
+  \ value: 'foobar' },\n        { name: 'hashed_emails', value: 'test@example.com'\
+  \ },\n        { name: 'hashed_phone_number', value: '+55 19 9-9999-9999' }\n   \
+  \   ]\n    }, objToBeMerged || {})\n  );\n};\n\nmock('sendHttpRequest', (requestUrl,\
+  \ callback, requestOptions, requestBody) => {\n  if (typeof callback === 'function')\
+  \ {\n    callback(200);\n  } else {\n    requestBody = requestOptions;\n    requestOptions\
+  \ = callback;\n    return Promise.create((resolve, reject) => {\n      resolve({\
+  \ statusCode: 200 });\n    });  \n  }\n});\n\nmock('getRequestHeader', (header)\
+  \ => {\n  if (header === 'trace-id') return 'expectedTraceId';\n});\n\nmock('getTimestampMillis',\
+  \ 1747945830456);"
 
 
 ___NOTES___

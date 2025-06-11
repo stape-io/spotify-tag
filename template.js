@@ -346,7 +346,7 @@ function sendRequest(mappedData) {
         ResponseBody: body
       });
 
-      if (!data.useOptimisticScenario) {
+      if (!useOptimisticScenario) {
         if (statusCode >= 200 && statusCode < 300) {
           data.gtmOnSuccess();
         } else {

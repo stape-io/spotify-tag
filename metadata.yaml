@@ -1,6 +1,8 @@
 homepage: 'https://stape.io/'
 documentation: 'https://github.com/stape-io/spotify-tag'
 versions:
+  - sha: 4c81c06411e7b454f009fd04831bd1e127eee40b
+    changeNotes: Update consent section.
   - sha: b78624a4390641f4d5ce8f9b91d119c0d5a7536a
     changeNotes: Renamed the template. Improved tests.
   - sha: bbbb25c8a0b558f9e32c69a626f9c10ccb24f03a

@@ -1,4 +1,5 @@
 homepage: 'https://stape.io/'
+documentation: 'https://github.com/stape-io/spotify-tag'
 versions:
   - sha: b78624a4390641f4d5ce8f9b91d119c0d5a7536a
     changeNotes: Renamed the template. Improved tests.

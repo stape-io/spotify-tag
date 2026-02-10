@@ -17,7 +17,8 @@ const sendHttpRequest = require('sendHttpRequest');
 const setCookie = require('setCookie');
 const sha256Sync = require('sha256Sync');
 
-/**********************************************************************************************/
+/*==============================================================================
+==============================================================================*/
 
 const traceId = getRequestHeader('trace-id');
 
@@ -25,7 +26,7 @@ const eventData = getAllEventData();
 
 const useOptimisticScenario = isUIFieldTrue(data.useOptimisticScenario);
 
-if (!isConsentGivenOrNotRequired()) {
+if (!isConsentGivenOrNotRequired(data, eventData)) {
   return data.gtmOnSuccess();
 }
 
@@ -56,8 +57,9 @@ if (useOptimisticScenario) {
   return data.gtmOnSuccess();
 }
 
-/**********************************************************************************************/
-// Vendor related functions
+/*==============================================================================
+Vendor related functions
+==============================================================================*/
 
 function mapEvent(data, eventData) {
   let mappedData = {
@@ -362,8 +364,9 @@ function sendRequest(mappedData) {
   );
 }
 
-/**********************************************************************************************/
-// Helpers
+/*==============================================================================
+Helpers
+==============================================================================*/
 
 function isHashed(value) {
   if (!value) return false;
@@ -489,7 +492,7 @@ function mergeObj(target, source) {
   return target;
 }
 
-function isConsentGivenOrNotRequired() {
+function isConsentGivenOrNotRequired(data, eventData) {
   if (data.adStorageConsent !== 'required') return true;
   if (eventData.consent_state) return !!eventData.consent_state.ad_storage;
   const xGaGcs = eventData['x-ga-gcs'] || ''; // x-ga-gcs is a string like "G110"

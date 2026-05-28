@@ -26,7 +26,7 @@ ___INFO___
     "displayName": "stape.io",
     "thumbnail": "data:image/png;base64,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\u003d"
   },
-  "description": "Tag that sends data to Spotify using the (in beta) Spotify Conversions API.",
+  "description": "Tag that sends data to Spotify using the Spotify Conversions API.",
   "containerContexts": [
     "SERVER"
   ]
@@ -531,111 +531,14 @@ ___TEMPLATE_PARAMETERS___
         "defaultValue": "optional"
       }
     ]
-  },
-  {
-    "displayName": "Logs Settings",
-    "name": "logsGroup",
-    "groupStyle": "ZIPPY_CLOSED",
-    "type": "GROUP",
-    "subParams": [
-      {
-        "type": "RADIO",
-        "name": "logType",
-        "radioItems": [
-          {
-            "value": "no",
-            "displayValue": "Do not log"
-          },
-          {
-            "value": "debug",
-            "displayValue": "Log to console during debug and preview"
-          },
-          {
-            "value": "always",
-            "displayValue": "Always log to console"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "debug"
-      }
-    ]
-  },
-  {
-    "displayName": "BigQuery Logs Settings",
-    "name": "bigQueryLogsGroup",
-    "groupStyle": "ZIPPY_CLOSED",
-    "type": "GROUP",
-    "subParams": [
-      {
-        "type": "RADIO",
-        "name": "bigQueryLogType",
-        "radioItems": [
-          {
-            "value": "no",
-            "displayValue": "Do not log to BigQuery"
-          },
-          {
-            "value": "always",
-            "displayValue": "Log to BigQuery"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "no"
-      },
-      {
-        "type": "GROUP",
-        "name": "logsBigQueryConfigGroup",
-        "groupStyle": "NO_ZIPPY",
-        "subParams": [
-          {
-            "type": "TEXT",
-            "name": "logBigQueryProjectId",
-            "displayName": "BigQuery Project ID",
-            "simpleValueType": true,
-            "help": "Optional.  \u003cbr\u003e\u003cbr\u003e  If omitted, it will be retrieved from the environment variable \u003cI\u003eGOOGLE_CLOUD_PROJECT\u003c/i\u003e where the server container is running. If the server container is running on Google Cloud, \u003cI\u003eGOOGLE_CLOUD_PROJECT\u003c/i\u003e will already be set to the Google Cloud project\u0027s ID."
-          },
-          {
-            "type": "TEXT",
-            "name": "logBigQueryDatasetId",
-            "displayName": "BigQuery Dataset ID",
-            "simpleValueType": true,
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              }
-            ]
-          },
-          {
-            "type": "TEXT",
-            "name": "logBigQueryTableId",
-            "displayName": "BigQuery Table ID",
-            "simpleValueType": true,
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              }
-            ]
-          }
-        ],
-        "enablingConditions": [
-          {
-            "paramName": "bigQueryLogType",
-            "paramValue": "always",
-            "type": "EQUALS"
-          }
-        ]
-      }
-    ]
   }
 ]
 
 
 ___SANDBOXED_JS_FOR_SERVER___
 
-const BigQuery = require('BigQuery');
 const generateRandom = require('generateRandom');
 const getAllEventData = require('getAllEventData');
-const getContainerVersion = require('getContainerVersion');
 const getCookieValues = require('getCookieValues');
 const getRequestHeader = require('getRequestHeader');
 const getTimestampMillis = require('getTimestampMillis');
@@ -651,15 +554,14 @@ const sendHttpRequest = require('sendHttpRequest');
 const setCookie = require('setCookie');
 const sha256Sync = require('sha256Sync');
 
-/**********************************************************************************************/
-
-const traceId = getRequestHeader('trace-id');
+/*==============================================================================
+==============================================================================*/
 
 const eventData = getAllEventData();
 
 const useOptimisticScenario = isUIFieldTrue(data.useOptimisticScenario);
 
-if (!isConsentGivenOrNotRequired()) {
+if (!isConsentGivenOrNotRequired(data, eventData)) {
   return data.gtmOnSuccess();
 }
 
@@ -675,9 +577,8 @@ if (missingFields) {
   log({
     Name: 'Spotify',
     Type: 'Message',
-    TraceId: traceId,
     EventName: mappedData.conversion_events.events[0].event_name,
-    Message: 'Request was not sent.',
+    Message: '🛑 [ERROR] Request was not sent.',
     Reason: 'One or more required parameters are missing: ' + missingFields.join(' or ')
   });
 
@@ -690,8 +591,9 @@ if (useOptimisticScenario) {
   return data.gtmOnSuccess();
 }
 
-/**********************************************************************************************/
-// Vendor related functions
+/*==============================================================================
+Vendor related functions
+==============================================================================*/
 
 function mapEvent(data, eventData) {
   let mappedData = {
@@ -956,30 +858,9 @@ function generateRequestHeaders() {
 
 function sendRequest(mappedData) {
   const requestUrl = getRequestBaseUrl();
-
-  log({
-    Name: 'Spotify',
-    Type: 'Request',
-    TraceId: traceId,
-    EventName: mappedData.conversion_events.events[0].event_name,
-    RequestMethod: 'POST',
-    RequestUrl: requestUrl,
-    RequestBody: mappedData
-  });
-
   return sendHttpRequest(
     requestUrl,
     (statusCode, headers, body) => {
-      log({
-        Name: 'Spotify',
-        Type: 'Response',
-        TraceId: traceId,
-        EventName: mappedData.conversion_events.events[0].event_name,
-        ResponseStatusCode: statusCode,
-        ResponseHeaders: headers,
-        ResponseBody: body
-      });
-
       if (!useOptimisticScenario) {
         if (statusCode >= 200 && statusCode < 300) {
           data.gtmOnSuccess();
@@ -996,8 +877,9 @@ function sendRequest(mappedData) {
   );
 }
 
-/**********************************************************************************************/
-// Helpers
+/*==============================================================================
+Helpers
+==============================================================================*/
 
 function isHashed(value) {
   if (!value) return false;
@@ -1113,7 +995,7 @@ function isUIFieldTrue(field) {
 
 function isValidValue(value) {
   const valueType = getType(value);
-  return valueType !== 'null' && valueType !== 'undefined' && value !== '';
+  return valueType !== 'null' && valueType !== 'undefined' && value !== '' && value === value;
 }
 
 function mergeObj(target, source) {
@@ -1123,7 +1005,7 @@ function mergeObj(target, source) {
   return target;
 }
 
-function isConsentGivenOrNotRequired() {
+function isConsentGivenOrNotRequired(data, eventData) {
   if (data.adStorageConsent !== 'required') return true;
   if (eventData.consent_state) return !!eventData.consent_state.ad_storage;
   const xGaGcs = eventData['x-ga-gcs'] || ''; // x-ga-gcs is a string like "G110"
@@ -1131,91 +1013,8 @@ function isConsentGivenOrNotRequired() {
 }
 
 function log(rawDataToLog) {
-  const logDestinationsHandlers = {};
-  if (determinateIsLoggingEnabled()) logDestinationsHandlers.console = logConsole;
-  if (determinateIsLoggingEnabledForBigQuery()) logDestinationsHandlers.bigQuery = logToBigQuery;
-
-  const keyMappings = {
-    // No transformation for Console is needed.
-    bigQuery: {
-      Name: 'tag_name',
-      Type: 'type',
-      TraceId: 'trace_id',
-      EventName: 'event_name',
-      RequestMethod: 'request_method',
-      RequestUrl: 'request_url',
-      RequestBody: 'request_body',
-      ResponseStatusCode: 'response_status_code',
-      ResponseHeaders: 'response_headers',
-      ResponseBody: 'response_body'
-    }
-  };
-
-  for (const logDestination in logDestinationsHandlers) {
-    const handler = logDestinationsHandlers[logDestination];
-    if (!handler) continue;
-
-    const mapping = keyMappings[logDestination];
-    const dataToLog = mapping ? {} : rawDataToLog;
-
-    if (mapping) {
-      for (const key in rawDataToLog) {
-        const mappedKey = mapping[key] || key;
-        dataToLog[mappedKey] = rawDataToLog[key];
-      }
-    }
-
-    handler(dataToLog);
-  }
-}
-
-function logConsole(dataToLog) {
-  logToConsole(JSON.stringify(dataToLog));
-}
-
-function logToBigQuery(dataToLog) {
-  const connectionInfo = {
-    projectId: data.logBigQueryProjectId,
-    datasetId: data.logBigQueryDatasetId,
-    tableId: data.logBigQueryTableId
-  };
-
-  dataToLog.timestamp = getTimestampMillis();
-
-  ['request_body', 'response_headers', 'response_body'].forEach((p) => {
-    dataToLog[p] = JSON.stringify(dataToLog[p]);
-  });
-
-  const bigquery =
-    getType(BigQuery) === 'function' ? BigQuery() /* Only during Unit Tests */ : BigQuery;
-  bigquery.insert(connectionInfo, [dataToLog], { ignoreUnknownValues: true });
-}
-
-function determinateIsLoggingEnabled() {
-  const containerVersion = getContainerVersion();
-  const isDebug = !!(
-    containerVersion &&
-    (containerVersion.debugMode || containerVersion.previewMode)
-  );
-
-  if (!data.logType) {
-    return isDebug;
-  }
-
-  if (data.logType === 'no') {
-    return false;
-  }
-
-  if (data.logType === 'debug') {
-    return isDebug;
-  }
-
-  return data.logType === 'always';
-}
-
-function determinateIsLoggingEnabledForBigQuery() {
-  if (data.bigQueryLogType === 'no') return false;
-  return data.bigQueryLogType === 'always';
+  rawDataToLog.TraceId = getRequestHeader('trace-id');
+  logToConsole(JSON.stringify(rawDataToLog));
 }
 
 
@@ -1357,16 +1156,6 @@ ___SERVER_PERMISSIONS___
     },
     "clientAnnotations": {
       "isEditedByUser": true
-    },
-    "isRequired": true
-  },
-  {
-    "instance": {
-      "key": {
-        "publicId": "read_container_data",
-        "versionId": "1"
-      },
-      "param": []
     },
     "isRequired": true
   },
@@ -1533,67 +1322,6 @@ ___SERVER_PERMISSIONS___
               {
                 "type": 1,
                 "string": "https://capi.spotify.com/capi-3p/events/"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "clientAnnotations": {
-      "isEditedByUser": true
-    },
-    "isRequired": true
-  },
-  {
-    "instance": {
-      "key": {
-        "publicId": "access_bigquery",
-        "versionId": "1"
-      },
-      "param": [
-        {
-          "key": "allowedTables",
-          "value": {
-            "type": 2,
-            "listItem": [
-              {
-                "type": 3,
-                "mapKey": [
-                  {
-                    "type": 1,
-                    "string": "projectId"
-                  },
-                  {
-                    "type": 1,
-                    "string": "datasetId"
-                  },
-                  {
-                    "type": 1,
-                    "string": "tableId"
-                  },
-                  {
-                    "type": 1,
-                    "string": "operation"
-                  }
-                ],
-                "mapValue": [
-                  {
-                    "type": 1,
-                    "string": "*"
-                  },
-                  {
-                    "type": 1,
-                    "string": "*"
-                  },
-                  {
-                    "type": 1,
-                    "string": "*"
-                  },
-                  {
-                    "type": 1,
-                    "string": "write"
-                  }
-                ]
               }
             ]
           }
@@ -1846,80 +1574,6 @@ scenarios:
 
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
-- name: Should log to console, if the 'Always log to console' option is selected
-  code: "setGetAllEventData();\nmockData.logType = 'always';\n\nconst expectedDebugMode\
-    \ = true;\nmock('getContainerVersion', () => {\n  return {\n    debugMode: expectedDebugMode\n\
-    \  };\n}); \n\nmock('logToConsole', (logData) => {\n  const parsedLogData = JSON.parse(logData);\n\
-    \  requiredConsoleKeys.forEach(p => assertThat(parsedLogData[p]).isDefined());\n\
-    });\n\nrunCode(mockData);\n\nassertApi('logToConsole').wasCalled();\nassertApi('gtmOnSuccess').wasCalled();\n\
-    assertApi('gtmOnFailure').wasNotCalled();"
-- name: Should log to console, if the 'Log during debug and preview' option is selected
-    AND is on preview mode
-  code: |-
-    setGetAllEventData();
-    mockData.logType = 'debug';
-
-    const expectedDebugMode = true;
-    mock('getContainerVersion', () => {
-      return {
-        debugMode: expectedDebugMode
-      };
-    });
-
-    mock('logToConsole', (logData) => {
-      const parsedLogData = JSON.parse(logData);
-      requiredConsoleKeys.forEach(p => assertThat(parsedLogData[p]).isDefined());
-    });
-
-    runCode(mockData);
-
-    assertApi('logToConsole').wasCalled();
-    assertApi('gtmOnSuccess').wasCalled();
-    assertApi('gtmOnFailure').wasNotCalled();
-- name: Should NOT log to console, if the 'Log during debug and preview' option is
-    selected AND is NOT on preview mode
-  code: |-
-    setGetAllEventData();
-    mockData.logType = 'debug';
-
-    const expectedDebugMode = false;
-    mock('getContainerVersion', () => {
-      return {
-        debugMode: expectedDebugMode
-      };
-    });
-
-    runCode(mockData);
-
-    assertApi('logToConsole').wasNotCalled();
-    assertApi('gtmOnSuccess').wasCalled();
-    assertApi('gtmOnFailure').wasNotCalled();
-- name: Should NOT log to console, if the 'Do not log' option is selected
-  code: |-
-    setGetAllEventData();
-    mockData.logType = 'no';
-
-    runCode(mockData);
-
-    assertApi('logToConsole').wasNotCalled();
-    assertApi('gtmOnSuccess').wasCalled();
-    assertApi('gtmOnFailure').wasNotCalled();
-- name: Should log to BQ, if the 'Log to BigQuery' option is selected
-  code: "setGetAllEventData();\nmockData.bigQueryLogType = 'always';\n\n// assertApi\
-    \ doesn't work for 'BigQuery.insert()'.\n// Ref: https://gtm-gear.com/posts/gtm-templates-testing/\n\
-    mock('BigQuery', () => {\n  return { \n    insert: (connectionInfo, rows, options)\
-    \ => { \n      assertThat(connectionInfo).isDefined();\n      assertThat(rows).isArray();\n\
-    \      assertThat(rows).hasLength(1);\n      requiredBqKeys.forEach(p => assertThat(rows[0][p]).isDefined());\n\
-    \      assertThat(options).isEqualTo(expectedBqOptions);\n      return Promise.create((resolve,\
-    \ reject) => {\n        resolve();\n      });\n    }\n  };\n});\n\nrunCode(mockData);\n\
-    \nassertApi('gtmOnSuccess').wasCalled();\nassertApi('gtmOnFailure').wasNotCalled();"
-- name: Should NOT log to BQ, if the 'Do not log to BigQuery' option is selected
-  code: "setGetAllEventData();\nmockData.bigQueryLogType = 'no';\n\n// assertApi doesn't\
-    \ work for 'BigQuery.insert()'.\n// Ref: https://gtm-gear.com/posts/gtm-templates-testing/\n\
-    mock('BigQuery', () => {\n  return { \n    insert: (connectionInfo, rows, options)\
-    \ => { \n      fail('BigQuery.insert should not have been called.');\n      return\
-    \ Promise.create((resolve, reject) => {\n        resolve();\n      });\n    }\n\
-    \  };\n});\n\nrunCode(mockData);\n\nassertApi('gtmOnSuccess').wasCalled();\nassertApi('gtmOnFailure').wasNotCalled();"
 setup: "const JSON = require('JSON');\nconst Promise = require('Promise');\nconst\
   \ makeInteger = require('makeInteger');\n\nconst mergeObj = (target, source) =>\
   \ {\n  for (const key in source) {\n    if (source.hasOwnProperty(key)) target[key]\
@@ -1988,6 +1642,8 @@ setup: "const JSON = require('JSON');\nconst Promise = require('Promise');\ncons
 
 ___NOTES___
 
-Created on 02/05/2021, 09:39:23
+2026-05-25 Change Notes:
+ - Logging removal.
 
+Created on 02/05/2021, 09:39:23
 

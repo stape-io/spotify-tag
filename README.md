@@ -16,7 +16,6 @@ The **Spotify Conversions API Tag** allows you to send web and app events from y
 5. Add **User Data Parameters** like `email`, `phone`, `IP address`, and `device ID`. Emails and phone numbers will be hashed automatically if not already hashed.
 6. (Optional) Enable automatic **Device ID cookie generation** to persist identifiers across sessions.
 7. (Optional) Enable **Consent Settings** to only send data if marketing consent is granted.
-8. (Optional) Configure **Logging Settings** to monitor request/response data in the console or BigQuery.
 
 ## Required Fields
 
@@ -38,7 +37,6 @@ The **Spotify Conversions API Tag** allows you to send web and app events from y
 - **Custom parameters**: Add custom server event or event details parameters.
 - **Consent control**: Only send events if marketing consent is given (if enabled).
 - **Optimistic scenario**: Improve tag performance by skipping API response checks.
-- **Logging**: Log data to the browser console or BigQuery for debugging and monitoring.
 
 ## Supported Standard Events
 

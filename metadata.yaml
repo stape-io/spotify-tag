@@ -1,6 +1,8 @@
 homepage: 'https://stape.io/'
 documentation: 'https://github.com/stape-io/spotify-tag'
 versions:
+  - sha: 1b02417516d828e13ea97a2fa5ee97d6e5261a01
+    changeNotes: Update template logo.
   - sha: 5c99cc53cbd7b1fc3de750958c7d39a7dc8ef7f2
     changeNotes: Logging removal.
   - sha: 4c81c06411e7b454f009fd04831bd1e127eee40b

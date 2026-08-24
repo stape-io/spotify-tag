@@ -19,17 +19,9 @@ const sha256Sync = require('sha256Sync');
 ==============================================================================*/
 
 const eventData = getAllEventData();
-
 const useOptimisticScenario = isUIFieldTrue(data.useOptimisticScenario);
 
-if (!isConsentGivenOrNotRequired(data, eventData)) {
-  return data.gtmOnSuccess();
-}
-
-const url = eventData.page_location || getRequestHeader('referer');
-if (url && url.lastIndexOf('https://gtm-msr.appspot.com/', 0) === 0) {
-  return data.gtmOnSuccess();
-}
+if (shouldExitEarly(data, eventData)) return;
 
 const mappedData = mapEvent(data, eventData);
 
@@ -341,6 +333,25 @@ function sendRequest(mappedData) {
 /*==============================================================================
 Helpers
 ==============================================================================*/
+
+function getUrl(eventData) {
+  return eventData.page_location || getRequestHeader('referer') || eventData.page_referrer;
+}
+
+function shouldExitEarly(data, eventData) {
+  if (!isConsentGivenOrNotRequired(data, eventData)) {
+    data.gtmOnSuccess();
+    return true;
+  }
+
+  const url = getUrl(eventData);
+  if (url && url.lastIndexOf('https://gtm-msr.appspot.com/', 0) === 0) {
+    data.gtmOnSuccess();
+    return true;
+  }
+
+  return false;
+}
 
 function isHashed(value) {
   if (!value) return false;

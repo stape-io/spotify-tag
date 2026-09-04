@@ -1,6 +1,8 @@
 homepage: 'https://stape.io/'
 documentation: 'https://github.com/stape-io/spotify-tag'
 versions:
+  - sha: b559ff2b44e16ba0402d6413543a742accc61385
+    changeNotes: Added Automap toggles and third_party_source. Improved tests.
   - sha: 1b02417516d828e13ea97a2fa5ee97d6e5261a01
     changeNotes: Update template logo.
   - sha: 5c99cc53cbd7b1fc3de750958c7d39a7dc8ef7f2

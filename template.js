@@ -1,6 +1,8 @@
+const computeEffectiveTldPlusOne = require('computeEffectiveTldPlusOne');
 const generateRandom = require('generateRandom');
 const getAllEventData = require('getAllEventData');
 const getCookieValues = require('getCookieValues');
+const getEventData = require('getEventData');
 const getRequestHeader = require('getRequestHeader');
 const getTimestampMillis = require('getTimestampMillis');
 const getType = require('getType');
@@ -50,6 +52,7 @@ Vendor related functions
 
 function mapEvent(data, eventData) {
   let mappedData = {
+    third_party_source: 'stape',
     conversion_events: {
       capi_connection_id: data.connectionId
     }
@@ -78,32 +81,34 @@ function mapEventName(data, eventData) {
       purchase: 'Purchase'
     };
 
-    if (gaToEventName[eventName]) {
-      return gaToEventName[eventName];
-    }
-
-    return eventName;
+    return gaToEventName[eventName] || eventName;
   }
 
   return data.eventType === 'standard' ? data.eventNameStandard : data.eventNameCustom;
 }
 
 function addServerEventData(data, eventData, mappedData) {
+  const autoMapEnabled = data.hasOwnProperty('autoMapServerEventData')
+    ? data.autoMapServerEventData
+    : true; // To accomodate a breaking change.
+
   const event = {
     event_name: mapEventName(data, eventData)
   };
 
-  const eventId = eventData.event_id || eventData.eventId;
-  if (eventId) event.event_id = makeString(eventId);
+  if (autoMapEnabled) {
+    const eventId = eventData.event_id || eventData.eventId;
+    if (eventId) event.event_id = makeString(eventId);
 
-  const eventTime = eventData.event_time || eventData.eventTime || eventData.timestamp;
-  event.event_time = getConversionTimestamp(eventTime);
+    const eventTime = eventData.event_time || eventData.eventTime || eventData.timestamp;
+    event.event_time = getConversionTimestamp(eventTime);
+
+    if (eventData.page_location) event.event_source_url = eventData.page_location;
+  }
 
   if (data.actionSource) event.action_source = data.actionSource;
 
   if (isUIFieldTrue(data.optOutTargeting)) event.opt_out_targeting = true;
-
-  if (eventData.page_location) event.event_source_url = eventData.page_location;
 
   if (data.serverEventDataList) {
     data.serverEventDataList.forEach((d) => {
@@ -118,11 +123,16 @@ function addServerEventData(data, eventData, mappedData) {
 }
 
 function addEventDetailsData(data, eventData, mappedData) {
+  const autoMapEnabled = data.hasOwnProperty('autoMapEventDetailsParameters')
+    ? data.autoMapEventDetailsParameters
+    : true; // To accomodate a breaking change.
+
   const eventDetails = {};
 
-  if (eventData.value) eventDetails.amount = makeNumber(eventData.value);
-
-  if (eventData.currency) eventDetails.currency = eventData.currency;
+  if (autoMapEnabled) {
+    if (isValidValue(eventData.value)) eventDetails.amount = makeNumber(eventData.value);
+    if (eventData.currency) eventDetails.currency = eventData.currency;
+  }
 
   if (data.eventDetailsParametersObject) mergeObj(eventDetails, data.eventDetailsParametersObject);
   if (data.eventDetailsParametersList) {
@@ -135,42 +145,48 @@ function addEventDetailsData(data, eventData, mappedData) {
 }
 
 function addUserData(data, eventData, mappedData) {
+  const autoMapEnabled = data.hasOwnProperty('autoMapUserData') ? data.autoMapUserData : true; // To accomodate a breaking change.
+
   const eventDataUserData = eventData.user_data || {};
-
-  let email =
-    eventData.email ||
-    eventData.email_address ||
-    eventDataUserData.email ||
-    eventDataUserData.email_address ||
-    eventDataUserData.sha256_email_address;
-  const emailType = getType(email);
-  if (emailType === 'string') email = [email];
-  else if (emailType === 'array') email = email.length > 0 ? email : undefined;
-  else if (emailType === 'object') {
-    const emailsFromObject = Object.values(email);
-    if (emailsFromObject.length) email = emailsFromObject;
-  }
-
-  let phone =
-    eventData.phone ||
-    eventData.phone_number ||
-    eventDataUserData.phone ||
-    eventDataUserData.phone_number ||
-    eventDataUserData.sha256_phone_number;
-  const phoneType = getType(phone);
-  if (phoneType === 'array') phone = phone.length > 0 ? phone[0] : undefined;
-  else if (phoneType === 'object') {
-    const phonesFromObject = Object.values(phone);
-    if (phonesFromObject.length) phone = phonesFromObject[0];
-  }
 
   let userData = {};
 
-  if (email) userData.hashed_emails = email;
+  if (autoMapEnabled) {
+    let email =
+      eventData.email ||
+      eventData.email_address ||
+      eventDataUserData.email ||
+      eventDataUserData.email_address ||
+      eventDataUserData.sha256_email_address;
 
-  if (phone) userData.hashed_phone_number = phone;
+    const emailType = getType(email);
+    if (emailType === 'string') email = [email];
+    else if (emailType === 'array') email = email.length > 0 ? email : undefined;
+    else if (emailType === 'object') {
+      const emailsFromObject = Object.values(email);
+      if (emailsFromObject.length) email = emailsFromObject;
+    }
 
-  if (eventData.ip_override) userData.ip_address = eventData.ip_override;
+    let phone =
+      eventData.phone ||
+      eventData.phone_number ||
+      eventDataUserData.phone ||
+      eventDataUserData.phone_number ||
+      eventDataUserData.sha256_phone_number;
+
+    const phoneType = getType(phone);
+    if (phoneType === 'array') phone = phone.length > 0 ? phone[0] : undefined;
+    else if (phoneType === 'object') {
+      const phonesFromObject = Object.values(phone);
+      if (phonesFromObject.length) phone = phonesFromObject[0];
+    }
+
+    if (email) userData.hashed_emails = email;
+
+    if (phone) userData.hashed_phone_number = phone;
+
+    if (eventData.ip_override) userData.ip_address = eventData.ip_override;
+  }
 
   if (data.userDataObject) mergeObj(userData, data.userDataObject);
   if (data.userDataParametersList) {
@@ -202,7 +218,7 @@ function addUserData(data, eventData, mappedData) {
     userData.device_id = deviceId;
 
     const cookieOptions = {
-      domain: data.deviceIdCookieDomain || 'auto',
+      domain: getCookieDomain(data.deviceIdCookieDomain),
       samesite: 'Lax',
       path: '/',
       secure: true,
@@ -291,7 +307,7 @@ function areThereRequiredParametersMissing(mappedData) {
   const userDataParametersMissing = requiredUserDataParameters.every((p) => {
     if (!isValidValue(userData[p])) return true;
     if (p === 'hashed_emails') {
-      return mappedData[p].every((email) => !isValidValue(userData[p][email]));
+      return userData[p].every((email) => !isValidValue(email));
     }
     return false;
   });
@@ -315,11 +331,7 @@ function sendRequest(mappedData) {
     requestUrl,
     (statusCode, headers, body) => {
       if (!useOptimisticScenario) {
-        if (statusCode >= 200 && statusCode < 300) {
-          data.gtmOnSuccess();
-        } else {
-          data.gtmOnFailure();
-        }
+        return statusCode >= 200 && statusCode < 300 ? data.gtmOnSuccess() : data.gtmOnFailure();
       }
     },
     {
@@ -459,6 +471,13 @@ function convertTimestampToISO(timestamp) {
     padStart(milliSeconds, 3) +
     'Z'
   );
+}
+
+function getCookieDomain(defaultCookieDomain) {
+  return !defaultCookieDomain || defaultCookieDomain === 'auto'
+    ? computeEffectiveTldPlusOne(getEventData('page_location') || getRequestHeader('referer')) ||
+        'auto'
+    : defaultCookieDomain;
 }
 
 function isUIFieldTrue(field) {

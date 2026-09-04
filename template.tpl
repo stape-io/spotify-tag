@@ -251,6 +251,14 @@ ___TEMPLATE_PARAMETERS___
         "displayName": "Check this \u003ca href\u003d\"https://adshelp.spotify.com/s/article/Spotify-Conversions-API-US?language\u003den_US\"\u003ehelp page\u003c/a\u003e for a description of each \u003ci\u003eServer Event Data Parameters\u003c/i\u003e and its expected type and value."
       },
       {
+        "type": "CHECKBOX",
+        "name": "autoMapServerEventData",
+        "checkboxText": "Automap Server Event Data",
+        "simpleValueType": true,
+        "defaultValue": true,
+        "help": "If enabled, the tag will attempt to automatically map parameters from your event data.\n\u003cbr/\u003e\u003cbr/\u003e\nAny value you manually enter in a parameter below will always override the auto-mapped value.\n\u003cbr/\u003e\u003cbr/\u003e\nDefault mappings:\n\u003cul\u003e\n\u003cli\u003eEvent ID: \u003ci\u003eeventData.event_id\u003c/i\u003e or \u003ci\u003eeventData.eventId\u003c/i\u003e\u003c/li\u003e\n\u003cli\u003eEvent Time: \u003ci\u003eeventData.event_time\u003c/i\u003e, \u003ci\u003eeventData.eventTime\u003c/i\u003e or \u003ci\u003eeventData.timestamp\u003c/i\u003e\u003c/li\u003e\n\u003cli\u003eSource URL: \u003ci\u003eeventData.page_location\u003c/i\u003e\u003c/li\u003e\n\u003c/ul\u003e"
+      },
+      {
         "name": "serverEventDataList",
         "simpleTableColumns": [
           {
@@ -312,6 +320,14 @@ ___TEMPLATE_PARAMETERS___
         "type": "LABEL",
         "name": "eventDetailsParametersLabel",
         "displayName": "Check this \u003ca href\u003d\"https://adshelp.spotify.com/s/article/Spotify-Conversions-API-US?language\u003den_US\"\u003ehelp page\u003c/a\u003e for a description of each \u003ci\u003eEvent Details Parameters\u003c/i\u003e and its expected type and value."
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "autoMapEventDetailsParameters",
+        "checkboxText": "Automap Event Details Parameters",
+        "simpleValueType": true,
+        "defaultValue": true,
+        "help": "If enabled, the tag will attempt to automatically map parameters from your event data.\n\u003cbr/\u003e\u003cbr/\u003e\nAny value you manually enter in a parameter below will always override the auto-mapped value.\n\u003cbr/\u003e\u003cbr/\u003e\nDefault mappings:\n\u003cul\u003e\n\u003cli\u003eAmount: \u003ci\u003eeventData.value\u003c/i\u003e\u003c/li\u003e\n\u003cli\u003eCurrency: \u003ci\u003eeventData.currency\u003c/i\u003e\u003c/li\u003e\n\u003c/ul\u003e"
       },
       {
         "name": "eventDetailsParametersList",
@@ -387,7 +403,7 @@ ___TEMPLATE_PARAMETERS___
             "type": "GROUP",
             "name": "deviceIdCookieSettingsGroup",
             "displayName": "Cookie Settings",
-            "groupStyle": "ZIPPY_OPEN_ON_PARAM",
+            "groupStyle": "ZIPPY_CLOSED",
             "subParams": [
               {
                 "type": "TEXT",
@@ -460,6 +476,14 @@ ___TEMPLATE_PARAMETERS___
         "type": "LABEL",
         "name": "userDataParametersLabel",
         "displayName": "Check this \u003ca href\u003d\"https://adshelp.spotify.com/s/article/Spotify-Conversions-API-US?language\u003den_US\"\u003ehelp page\u003c/a\u003e for a description of each \u003ci\u003eUser Data Parameters\u003c/i\u003e and its expected type and value."
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "autoMapUserData",
+        "checkboxText": "Automap User Data",
+        "simpleValueType": true,
+        "defaultValue": true,
+        "help": "If enabled, the tag will attempt to automatically map parameters from your event data.\n\u003cbr/\u003e\u003cbr/\u003e\nAny value you manually enter in a parameter below will always override the auto-mapped value.\n\u003cbr/\u003e\u003cbr/\u003e\nDefault mappings:\n\u003cul\u003e\n\u003cli\u003eEmail: \u003ci\u003eeventData.email\u003c/i\u003e, \u003ci\u003eeventData.email_address\u003c/i\u003e, \u003ci\u003eeventData.user_data.email\u003c/i\u003e, \u003ci\u003eeventData.user_data.email_address\u003c/i\u003e or \u003ci\u003eeventData.user_data.sha256_email_address\u003c/i\u003e\u003c/li\u003e\n\u003cli\u003ePhone Number: \u003ci\u003eeventData.phone\u003c/i\u003e, \u003ci\u003eeventData.phone_number\u003c/i\u003e, \u003ci\u003eeventData.user_data.phone\u003c/i\u003e, \u003ci\u003eeventData.user_data.phone_number\u003c/i\u003e or \u003ci\u003eeventData.user_data.sha256_phone_number\u003c/i\u003e\u003c/li\u003e\n\u003cli\u003eIP Address: \u003ci\u003eeventData.ip_override\u003c/i\u003e\u003c/li\u003e\n\u003c/ul\u003e"
       },
       {
         "type": "SIMPLE_TABLE",
@@ -537,9 +561,11 @@ ___TEMPLATE_PARAMETERS___
 
 ___SANDBOXED_JS_FOR_SERVER___
 
+const computeEffectiveTldPlusOne = require('computeEffectiveTldPlusOne');
 const generateRandom = require('generateRandom');
 const getAllEventData = require('getAllEventData');
 const getCookieValues = require('getCookieValues');
+const getEventData = require('getEventData');
 const getRequestHeader = require('getRequestHeader');
 const getTimestampMillis = require('getTimestampMillis');
 const getType = require('getType');
@@ -589,6 +615,7 @@ Vendor related functions
 
 function mapEvent(data, eventData) {
   let mappedData = {
+    third_party_source: 'stape',
     conversion_events: {
       capi_connection_id: data.connectionId
     }
@@ -617,32 +644,34 @@ function mapEventName(data, eventData) {
       purchase: 'Purchase'
     };
 
-    if (gaToEventName[eventName]) {
-      return gaToEventName[eventName];
-    }
-
-    return eventName;
+    return gaToEventName[eventName] || eventName;
   }
 
   return data.eventType === 'standard' ? data.eventNameStandard : data.eventNameCustom;
 }
 
 function addServerEventData(data, eventData, mappedData) {
+  const autoMapEnabled = data.hasOwnProperty('autoMapServerEventData')
+    ? data.autoMapServerEventData
+    : true; // To accomodate a breaking change.
+
   const event = {
     event_name: mapEventName(data, eventData)
   };
 
-  const eventId = eventData.event_id || eventData.eventId;
-  if (eventId) event.event_id = makeString(eventId);
+  if (autoMapEnabled) {
+    const eventId = eventData.event_id || eventData.eventId;
+    if (eventId) event.event_id = makeString(eventId);
 
-  const eventTime = eventData.event_time || eventData.eventTime || eventData.timestamp;
-  event.event_time = getConversionTimestamp(eventTime);
+    const eventTime = eventData.event_time || eventData.eventTime || eventData.timestamp;
+    event.event_time = getConversionTimestamp(eventTime);
+
+    if (eventData.page_location) event.event_source_url = eventData.page_location;
+  }
 
   if (data.actionSource) event.action_source = data.actionSource;
 
   if (isUIFieldTrue(data.optOutTargeting)) event.opt_out_targeting = true;
-
-  if (eventData.page_location) event.event_source_url = eventData.page_location;
 
   if (data.serverEventDataList) {
     data.serverEventDataList.forEach((d) => {
@@ -657,11 +686,16 @@ function addServerEventData(data, eventData, mappedData) {
 }
 
 function addEventDetailsData(data, eventData, mappedData) {
+  const autoMapEnabled = data.hasOwnProperty('autoMapEventDetailsParameters')
+    ? data.autoMapEventDetailsParameters
+    : true; // To accomodate a breaking change.
+
   const eventDetails = {};
 
-  if (eventData.value) eventDetails.amount = makeNumber(eventData.value);
-
-  if (eventData.currency) eventDetails.currency = eventData.currency;
+  if (autoMapEnabled) {
+    if (isValidValue(eventData.value)) eventDetails.amount = makeNumber(eventData.value);
+    if (eventData.currency) eventDetails.currency = eventData.currency;
+  }
 
   if (data.eventDetailsParametersObject) mergeObj(eventDetails, data.eventDetailsParametersObject);
   if (data.eventDetailsParametersList) {
@@ -674,42 +708,48 @@ function addEventDetailsData(data, eventData, mappedData) {
 }
 
 function addUserData(data, eventData, mappedData) {
+  const autoMapEnabled = data.hasOwnProperty('autoMapUserData') ? data.autoMapUserData : true; // To accomodate a breaking change.
+
   const eventDataUserData = eventData.user_data || {};
-
-  let email =
-    eventData.email ||
-    eventData.email_address ||
-    eventDataUserData.email ||
-    eventDataUserData.email_address ||
-    eventDataUserData.sha256_email_address;
-  const emailType = getType(email);
-  if (emailType === 'string') email = [email];
-  else if (emailType === 'array') email = email.length > 0 ? email : undefined;
-  else if (emailType === 'object') {
-    const emailsFromObject = Object.values(email);
-    if (emailsFromObject.length) email = emailsFromObject;
-  }
-
-  let phone =
-    eventData.phone ||
-    eventData.phone_number ||
-    eventDataUserData.phone ||
-    eventDataUserData.phone_number ||
-    eventDataUserData.sha256_phone_number;
-  const phoneType = getType(phone);
-  if (phoneType === 'array') phone = phone.length > 0 ? phone[0] : undefined;
-  else if (phoneType === 'object') {
-    const phonesFromObject = Object.values(phone);
-    if (phonesFromObject.length) phone = phonesFromObject[0];
-  }
 
   let userData = {};
 
-  if (email) userData.hashed_emails = email;
+  if (autoMapEnabled) {
+    let email =
+      eventData.email ||
+      eventData.email_address ||
+      eventDataUserData.email ||
+      eventDataUserData.email_address ||
+      eventDataUserData.sha256_email_address;
 
-  if (phone) userData.hashed_phone_number = phone;
+    const emailType = getType(email);
+    if (emailType === 'string') email = [email];
+    else if (emailType === 'array') email = email.length > 0 ? email : undefined;
+    else if (emailType === 'object') {
+      const emailsFromObject = Object.values(email);
+      if (emailsFromObject.length) email = emailsFromObject;
+    }
 
-  if (eventData.ip_override) userData.ip_address = eventData.ip_override;
+    let phone =
+      eventData.phone ||
+      eventData.phone_number ||
+      eventDataUserData.phone ||
+      eventDataUserData.phone_number ||
+      eventDataUserData.sha256_phone_number;
+
+    const phoneType = getType(phone);
+    if (phoneType === 'array') phone = phone.length > 0 ? phone[0] : undefined;
+    else if (phoneType === 'object') {
+      const phonesFromObject = Object.values(phone);
+      if (phonesFromObject.length) phone = phonesFromObject[0];
+    }
+
+    if (email) userData.hashed_emails = email;
+
+    if (phone) userData.hashed_phone_number = phone;
+
+    if (eventData.ip_override) userData.ip_address = eventData.ip_override;
+  }
 
   if (data.userDataObject) mergeObj(userData, data.userDataObject);
   if (data.userDataParametersList) {
@@ -741,7 +781,7 @@ function addUserData(data, eventData, mappedData) {
     userData.device_id = deviceId;
 
     const cookieOptions = {
-      domain: data.deviceIdCookieDomain || 'auto',
+      domain: getCookieDomain(data.deviceIdCookieDomain),
       samesite: 'Lax',
       path: '/',
       secure: true,
@@ -830,7 +870,7 @@ function areThereRequiredParametersMissing(mappedData) {
   const userDataParametersMissing = requiredUserDataParameters.every((p) => {
     if (!isValidValue(userData[p])) return true;
     if (p === 'hashed_emails') {
-      return mappedData[p].every((email) => !isValidValue(userData[p][email]));
+      return userData[p].every((email) => !isValidValue(email));
     }
     return false;
   });
@@ -854,11 +894,7 @@ function sendRequest(mappedData) {
     requestUrl,
     (statusCode, headers, body) => {
       if (!useOptimisticScenario) {
-        if (statusCode >= 200 && statusCode < 300) {
-          data.gtmOnSuccess();
-        } else {
-          data.gtmOnFailure();
-        }
+        return statusCode >= 200 && statusCode < 300 ? data.gtmOnSuccess() : data.gtmOnFailure();
       }
     },
     {
@@ -998,6 +1034,13 @@ function convertTimestampToISO(timestamp) {
     padStart(milliSeconds, 3) +
     'Z'
   );
+}
+
+function getCookieDomain(defaultCookieDomain) {
+  return !defaultCookieDomain || defaultCookieDomain === 'auto'
+    ? computeEffectiveTldPlusOne(getEventData('page_location') || getRequestHeader('referer')) ||
+        'auto'
+    : defaultCookieDomain;
 }
 
 function isUIFieldTrue(field) {
@@ -1350,34 +1393,420 @@ ___SERVER_PERMISSIONS___
 ___TESTS___
 
 scenarios:
-- name: Request is NOT sent when required Common Parameters are missing
+- name: '[Early Exit] Calls gtmOnSuccess and stops when consent is required but not
+    given'
+  code: |-
+    mockData.adStorageConsent = 'required';
+    setGetAllEventData({ 'x-ga-gcs': 'G100' });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+    assertApi('sendHttpRequest').wasNotCalled();
+- name: '[Early Exit] Proceeds normally when consent is required and given'
+  code: |-
+    setAllMockData({ adStorageConsent: 'required' });
+    setGetAllEventData({ consent_state: { ad_storage: true } });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+    assertApi('sendHttpRequest').wasCalled();
+- name: '[Early Exit] Calls gtmOnSuccess and stops when URL matches GTM preview endpoint'
+  code: |-
+    setGetAllEventData({ page_location: 'https://gtm-msr.appspot.com/preview' });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+    assertApi('sendHttpRequest').wasNotCalled();
+- name: '[Event Name] Standard mode sends the selected event name'
   code: |-
     setGetAllEventData();
+    mockData.eventType = 'standard';
+    mockData.eventNameStandard = 'Purchase';
 
-    mockData.serverEventDataList = [{ name: 'event_name', value: undefined }, { name: 'event_time', value: undefined }];
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      assertThat(parsedRequestBody.conversion_events.events[0].event_name).isEqualTo('Purchase');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Event Name] Custom mode sends the selected event name'
+  code: |-
+    setGetAllEventData();
+    mockData.eventType = 'custom';
+    mockData.eventNameCustom = 'Custom_Event_2';
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      assertThat(parsedRequestBody.conversion_events.events[0].event_name).isEqualTo('Custom_Event_2');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Event Name] Inherit mode maps GA4 event names to Spotify equivalents'
+  code: |-
+    mockData.eventType = 'inherit';
+
+    [
+      { input: 'page_view', expected: 'Page_View' },
+      { input: 'gtm.dom', expected: 'Page_View' },
+      { input: 'sign_up', expected: 'Sign_Up' },
+      { input: 'generate_lead', expected: 'Lead' },
+      { input: 'view_item', expected: 'View_Product' },
+      { input: 'add_to_cart', expected: 'Add_Cart' },
+      { input: 'begin_checkout', expected: 'Start_Checkout' },
+      { input: 'purchase', expected: 'Purchase' }
+    ].forEach((scenario) => {
+      setGetAllEventData({ event_name: scenario.input });
+
+      mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+        const parsedRequestBody = JSON.parse(requestBody);
+        assertThat(parsedRequestBody.conversion_events.events[0].event_name).isEqualTo(scenario.expected);
+        callback(200);
+      });
+
+      runCode(mockData);
+
+      assertApi('gtmOnSuccess').wasCalled();
+      assertApi('gtmOnFailure').wasNotCalled();
+    });
+- name: '[Event Name] Inherit mode passes through unknown GA4 event names as-is'
+  code: |-
+    mockData.eventType = 'inherit';
+    setGetAllEventData({ event_name: 'some_custom_ga4_event' });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      assertThat(parsedRequestBody.conversion_events.events[0].event_name).isEqualTo('some_custom_ga4_event');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Server Event Data] action_source and opt_out_targeting are sent from data
+    fields'
+  code: |-
+    setGetAllEventData();
+    mockData.actionSource = 'OFFLINE';
+    mockData.optOutTargeting = true;
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const event = parsedRequestBody.conversion_events.events[0];
+      assertThat(event.action_source).isEqualTo('OFFLINE');
+      assertThat(event.opt_out_targeting).isTrue();
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Server Event Data] Event ID Event Time and Source URL are auto-mapped from
+    event data by default'
+  code: |-
+    setGetAllEventData({
+      event_id: 'eventIdFromEventData',
+      event_time: '1700000000',
+      page_location: 'https://example.com/auto-mapped'
+    });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const event = parsedRequestBody.conversion_events.events[0];
+      assertThat(event.event_id).isEqualTo('eventIdFromEventData');
+      assertThat(event.event_time).isEqualTo('2023-11-14T22:13:20.000Z');
+      assertThat(event.event_source_url).isEqualTo('https://example.com/auto-mapped');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Server Event Data] Event ID and Source URL are NOT auto-mapped when Automap
+    is disabled'
+  code: |-
+    mockData.autoMapServerEventData = false;
+    mockData.serverEventDataList = [{ name: 'event_time', value: '1700000000' }];
+    setGetAllEventData({
+      event_id: 'eventIdFromEventData',
+      page_location: 'https://example.com/auto-mapped'
+    });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const event = parsedRequestBody.conversion_events.events[0];
+      assertThat(event.event_id).isUndefined();
+      assertThat(event.event_source_url).isUndefined();
+      assertThat(event.event_time).isEqualTo('2023-11-14T22:13:20.000Z');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Validation] Calls gtmOnFailure when Automap Server Event Data is disabled
+    and event_time is not provided manually'
+  code: |-
+    mockData.autoMapServerEventData = false;
+    setGetAllEventData({ event_time: '1700000000' });
 
     runCode(mockData);
 
     assertApi('gtmOnSuccess').wasNotCalled();
     assertApi('gtmOnFailure').wasCalled();
     assertApi('sendHttpRequest').wasNotCalled();
-- name: Request is NOT sent when required User Data Parameters are missing
+- name: '[Server Event Data] Manual serverEventDataList entries override auto-mapped
+    values'
+  code: |-
+    setGetAllEventData({
+      event_id: 'eventIdFromEventData',
+      page_location: 'https://example.com/auto-mapped'
+    });
+    mockData.serverEventDataList = [
+      { name: 'event_id', value: 'manualEventId' },
+      { name: 'event_source_url', value: 'https://example.com/manual' }
+    ];
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const event = parsedRequestBody.conversion_events.events[0];
+      assertThat(event.event_id).isEqualTo('manualEventId');
+      assertThat(event.event_source_url).isEqualTo('https://example.com/manual');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Event Details Parameters] Amount and Currency are auto-mapped from event
+    data by default'
+  code: |-
+    setGetAllEventData({ value: 55.5, currency: 'USD' });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const eventDetails = parsedRequestBody.conversion_events.events[0].event_details;
+      assertThat(eventDetails.amount).isEqualTo(55.5);
+      assertThat(eventDetails.currency).isEqualTo('USD');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Event Details Parameters] Amount and Currency are NOT auto-mapped when Automap
+    is disabled'
+  code: |-
+    mockData.autoMapEventDetailsParameters = false;
+    setGetAllEventData({ value: 55.5, currency: 'USD' });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const eventDetails = parsedRequestBody.conversion_events.events[0].event_details;
+      assertThat(eventDetails).isEqualTo({});
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Event Details Parameters] Object is merged and List entries override it'
+  code: |-
+    setGetAllEventData({ value: 55.5, currency: 'USD' });
+    mockData.eventDetailsParametersObject = { currency: 'EUR', content_name: 'fromObject' };
+    mockData.eventDetailsParametersList = [{ name: 'content_name', value: 'fromList' }];
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const eventDetails = parsedRequestBody.conversion_events.events[0].event_details;
+      assertThat(eventDetails.amount).isEqualTo(55.5);
+      assertThat(eventDetails.currency).isEqualTo('EUR');
+      assertThat(eventDetails.content_name).isEqualTo('fromList');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[User Data] Email Phone and IP Address are auto-mapped from event data by
+    default'
+  code: |-
+    setGetAllEventData({
+      email: 'auto@example.com',
+      phone: '+11234567890',
+      ip_override: '8.8.8.8'
+    });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const userData = parsedRequestBody.conversion_events.events[0].user_data;
+      assertThat(userData.hashed_emails).isDefined();
+      assertThat(userData.hashed_phone_number).isDefined();
+      assertThat(userData.ip_address).isEqualTo('8.8.8.8');
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[User Data] Email Phone and IP Address are NOT auto-mapped when Automap is
+    disabled'
+  code: |-
+    mockData.autoMapUserData = false;
+    setGetAllEventData({
+      email: 'auto@example.com',
+      phone: '+11234567890',
+      ip_override: '8.8.8.8'
+    });
+    mockData.userDataParametersList = [{ name: 'device_id', value: 'manualDeviceId' }];
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const userData = parsedRequestBody.conversion_events.events[0].user_data;
+      assertThat(userData.hashed_emails).isUndefined();
+      assertThat(userData.hashed_phone_number).isUndefined();
+      assertThat(userData.ip_address).isUndefined();
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[User Data] Email is extracted from array and object shapes in event data'
+  code: |-
+    [
+      { email: ['a@example.com', 'b@example.com'], expectedLength: 2 },
+      { email: { 0: 'c@example.com', 1: 'd@example.com' }, expectedLength: 2 },
+      { email: 'single@example.com', expectedLength: 1 }
+    ].forEach((scenario) => {
+      setGetAllEventData({ email: scenario.email, phone: undefined, user_data: undefined });
+
+      mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+        const parsedRequestBody = JSON.parse(requestBody);
+        const userData = parsedRequestBody.conversion_events.events[0].user_data;
+        assertThat(userData.hashed_emails).hasLength(scenario.expectedLength);
+        callback(200);
+      });
+
+      runCode(mockData);
+
+      assertApi('gtmOnSuccess').wasCalled();
+      assertApi('gtmOnFailure').wasNotCalled();
+    });
+- name: '[User Data] Phone is extracted from array and object shapes in event data'
+  code: |-
+    [
+      { phone: ['+11111111111', '+12222222222'], expected: '+11111111111' },
+      { phone: { 0: '+13333333333' }, expected: '+13333333333' },
+      { phone: '+14444444444', expected: '+14444444444' }
+    ].forEach((scenario) => {
+      setGetAllEventData({ email: undefined, phone: scenario.phone, user_data: undefined });
+
+      mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+        const parsedRequestBody = JSON.parse(requestBody);
+        const userData = parsedRequestBody.conversion_events.events[0].user_data;
+        assertThat(userData.hashed_phone_number).isDefined();
+        callback(200);
+      });
+
+      runCode(mockData);
+
+      assertApi('gtmOnSuccess').wasCalled();
+      assertApi('gtmOnFailure').wasNotCalled();
+    });
+- name: '[User Data] Object is merged and List entries override it'
   code: |-
     setGetAllEventData();
+    mockData.userDataObject = { ip_address: '9.9.9.9', device_id: 'fromObject' };
+    mockData.userDataParametersList = [
+      { name: 'device_id', value: 'fromList' },
+      { name: 'hashed_emails', value: 'single@example.com' }
+    ];
 
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const userData = parsedRequestBody.conversion_events.events[0].user_data;
+      assertThat(userData.ip_address).isEqualTo('9.9.9.9');
+      assertThat(userData.device_id).isEqualTo('fromList');
+      assertThat(userData.hashed_emails).isArray();
+      assertThat(userData.hashed_emails).hasLength(1);
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[User Data] Unhashed values are hashed and pre-hashed values are passed through'
+  code: |-
+    const preHashedEmail = '973dfe463ec85785f5f95af5ba3906eedb2d931c24e69824a89ea65dba4e813b';
+
+    setGetAllEventData();
     mockData.userDataObject = {
-      ip_address: undefined,
-      device_id: undefined,
-      hashed_emails: undefined,
+      hashed_emails: [preHashedEmail, 'Unhashed@Example.com'],
       hashed_phone_number: undefined
     };
+    mockData.userDataParametersList = [{ name: 'hashed_phone_number', value: '+1 (555) 123-4567' }];
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      const userData = parsedRequestBody.conversion_events.events[0].user_data;
+      assertThat(userData.hashed_emails[0]).isEqualTo(preHashedEmail);
+      assertThat(userData.hashed_emails[1]).isNotEqualTo('Unhashed@Example.com');
+      assertThat(userData.hashed_emails[1]).hasLength(64);
+      assertThat(userData.hashed_phone_number).hasLength(64);
+      callback(200);
+    });
 
     runCode(mockData);
 
-    assertApi('gtmOnSuccess').wasNotCalled();
-    assertApi('gtmOnFailure').wasCalled();
-    assertApi('sendHttpRequest').wasNotCalled();
-- name: Device ID cookie is NOT set and not used when the option is not active
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[User Data] Phone Number is normalized before hashing'
+  code: |-
+    setGetAllEventData();
+    mockData.userDataObject = { hashed_emails: ['test@example.com'] };
+    mockData.userDataParametersList = [{ name: 'hashed_phone_number', value: '+1 (555) 123-4567' }];
+
+    let capturedNormalizedPhone;
+    mock('sha256Sync', (value) => {
+      if (value.indexOf('+15551234567') !== -1) capturedNormalizedPhone = value;
+      return 'hashedvalue';
+    });
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertThat(capturedNormalizedPhone).isDefined();
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Device ID Cookie] Is NOT set and not used when the option is not active'
   code: |-
     setGetAllEventData();
     const expectedDeviceId = 'expectedDeviceId';
@@ -1397,8 +1826,8 @@ scenarios:
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
     assertApi('setCookie').wasNotCalled();
-- name: Device ID cookie is NOT set and not used when the option is active, but Anonymous
-    ID was set on UI field
+- name: '[Device ID Cookie] Is NOT set and not used when active but Device ID already
+    present'
   code: |-
     setGetAllEventData();
     const expectedDeviceId = 'expectedDeviceId';
@@ -1418,8 +1847,8 @@ scenarios:
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
     assertApi('setCookie').wasNotCalled();
-- name: Device ID cookie is set when the option is active and Anonymous ID was NOT
-    set on UI field (Random)
+- name: '[Device ID Cookie] Is generated at random when active and no Device ID source
+    is found'
   code: |-
     setGetAllEventData();
     mockData.userDataObject = {
@@ -1442,49 +1871,113 @@ scenarios:
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
     assertApi('setCookie').wasCalledWith('__spdt', deviceId, {
-      domain: mockData.deviceIdCookieDomain || 'auto',
+      domain: 'example.com',
       samesite: 'Lax',
       path: '/',
       secure: true,
-      httpOnly: !!data.deviceIdCookieHttpOnly,
-      'max-age': 60 * 60 * 24 * (makeInteger(data.deviceIdCookieExpiration) || 365)
+      httpOnly: false,
+      'max-age': 60 * 60 * 24 * 365
     });
-- name: Device ID cookie is set when the option is active and Anonymous ID was NOT
-    set on UI field (Read from Cookie)
+- name: '[Device ID Cookie] Is read from __spdt or __pdst cookie when active and no
+    Device ID is set'
+  code: |-
+    [
+      { cookieName: '__spdt', otherCookieName: '__pdst' },
+      { cookieName: '__pdst', otherCookieName: '__spdt' }
+    ].forEach((scenario) => {
+      setGetAllEventData();
+      mockData.userDataObject = {
+        device_id: undefined
+      };
+      mockData.userDataParametersList = [{ name: 'device_id', value: undefined }];
+      mockData.generateDeviceIdCookie = true;
+
+      const expectedDeviceIdFromCookie = 'expectedDeviceIdFromCookie';
+      mock('getCookieValues', (cookieName) => {
+        return cookieName === scenario.cookieName ? [expectedDeviceIdFromCookie] : [];
+      });
+
+      mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+        const parsedRequestBody = JSON.parse(requestBody);
+        assertThat(parsedRequestBody.conversion_events.events[0].user_data.device_id).isEqualTo(expectedDeviceIdFromCookie);
+        callback(200);
+      });
+
+      runCode(mockData);
+
+      assertApi('setCookie').wasCalledWith(scenario.cookieName, expectedDeviceIdFromCookie, {
+        domain: 'example.com',
+        samesite: 'Lax',
+        path: '/',
+        secure: true,
+        httpOnly: false,
+        'max-age': 60 * 60 * 24 * 365
+      });
+      assertApi('gtmOnSuccess').wasCalled();
+      assertApi('gtmOnFailure').wasNotCalled();
+    });
+- name: '[Cookie Domain] Auto mode resolves domain via computeEffectiveTldPlusOne'
   code: |-
     setGetAllEventData();
-    mockData.userDataObject = {
-      device_id: undefined
-    };
+    mockData.userDataObject = { device_id: undefined };
     mockData.userDataParametersList = [{ name: 'device_id', value: undefined }];
     mockData.generateDeviceIdCookie = true;
+    mockData.deviceIdCookieDomain = 'auto';
 
-    const expectedDeviceIdFromCookie = 'expectedDeviceIdFromCookie';
-    mock('getCookieValues', [expectedDeviceIdFromCookie]);
+    mock('computeEffectiveTldPlusOne', () => 'resolved.example.com');
 
+    let deviceId;
     mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
       const parsedRequestBody = JSON.parse(requestBody);
-      assertThat(parsedRequestBody.conversion_events.events[0].user_data.device_id).isEqualTo(expectedDeviceIdFromCookie);
+      deviceId = parsedRequestBody.conversion_events.events[0].user_data.device_id;
       callback(200);
     });
 
     runCode(mockData);
 
-    assertApi('gtmOnSuccess').wasCalled();
-    assertApi('gtmOnFailure').wasNotCalled();
-    assertApi('setCookie').wasCalledWith('__spdt', expectedDeviceIdFromCookie, {
-      domain: mockData.deviceIdCookieDomain || 'auto',
+    assertApi('setCookie').wasCalledWith('__spdt', deviceId, {
+      domain: 'resolved.example.com',
       samesite: 'Lax',
       path: '/',
       secure: true,
-      httpOnly: !!data.deviceIdCookieHttpOnly,
-      'max-age': 60 * 60 * 24 * (makeInteger(data.deviceIdCookieExpiration) || 365)
+      httpOnly: false,
+      'max-age': 60 * 60 * 24 * 365
     });
-- name: Request Options are correctly set
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Cookie Domain] Custom domain is used as-is without computing TLD+1'
+  code: |-
+    setGetAllEventData();
+    mockData.userDataObject = { device_id: undefined };
+    mockData.userDataParametersList = [{ name: 'device_id', value: undefined }];
+    mockData.generateDeviceIdCookie = true;
+    mockData.deviceIdCookieDomain = 'custom.mysite.com';
+
+    let deviceId;
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      const parsedRequestBody = JSON.parse(requestBody);
+      deviceId = parsedRequestBody.conversion_events.events[0].user_data.device_id;
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('setCookie').wasCalledWith('__spdt', deviceId, {
+      domain: 'custom.mysite.com',
+      samesite: 'Lax',
+      path: '/',
+      secure: true,
+      httpOnly: false,
+      'max-age': 60 * 60 * 24 * 365
+    });
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Request] URL and headers are correctly built'
   code: |-
     setGetAllEventData();
 
     mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      assertThat(requestUrl).isEqualTo('https://capi.spotify.com/capi-direct/events/');
       assertThat(requestOptions).isEqualTo({
         headers: {
           Authorization: 'Bearer ' + mockData.authToken,
@@ -1499,7 +1992,7 @@ scenarios:
 
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
-- name: Request is successfully built and sent - Data from UI fields
+- name: '[Request] Full body is built from UI fields'
   code: |-
     setAllMockData();
 
@@ -1509,6 +2002,7 @@ scenarios:
       assertThat(callback).isFunction();
       const parsedRequestBody = JSON.parse(requestBody);
       assertThat(parsedRequestBody).isEqualTo({
+        third_party_source: 'stape',
         conversion_events: {
           capi_connection_id: 'expectedConnectionId',
           events: [
@@ -1545,7 +2039,7 @@ scenarios:
 
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
-- name: Request is successfully built and sent - Data from UI fields fallbacks
+- name: '[Request] Full body falls back to event data'
   code: |-
     setGetAllEventData();
 
@@ -1555,6 +2049,7 @@ scenarios:
       assertThat(callback).isFunction();
       const parsedRequestBody = JSON.parse(requestBody);
       assertThat(parsedRequestBody).isEqualTo({
+        third_party_source: 'stape',
         conversion_events: {
           capi_connection_id: 'expectedConnectionId',
           events: [
@@ -1585,73 +2080,242 @@ scenarios:
 
     assertApi('gtmOnSuccess').wasCalled();
     assertApi('gtmOnFailure').wasNotCalled();
-setup: "const JSON = require('JSON');\nconst Promise = require('Promise');\nconst\
-  \ makeInteger = require('makeInteger');\n\nconst mergeObj = (target, source) =>\
-  \ {\n  for (const key in source) {\n    if (source.hasOwnProperty(key)) target[key]\
-  \ = source[key];\n  }\n  return target;\n};\n\nconst setGetAllEventData = (objToBeMerged)\
-  \ => {\n  mock('getAllEventData', mergeObj({\n    'x-ga-protocol_version': '2',\n\
-  \    'x-ga-measurement_id': 'G-123ABC',\n    'x-ga-gtm_version': '45je55e1za200',\n\
-  \    'x-ga-page_id': 1747422523211,\n    'x-ga-gcd': '13l3l3l3l1l1',\n    'x-ga-npa':\
-  \ '0',\n    'x-ga-dma': '0',\n    'x-ga-mp2-tag_exp':\n      '101509157~103116025~103130498~103130500~103136993~103136995~103200001~103207802~103211513~103233427~103252644~103252646~103263073~103301114~103301116',\n\
-  \    client_id: 'AUJctU7H7hBB/aMuhE4pKwGu5DWDdklg5abyyyn8i/I=.1747154479',\n   \
-  \ 'x-ga-ecid': '1294673677',\n    language: 'en-us',\n    screen_resolution: '1512x982',\n\
-  \    event_location: { country: 'BR', region: 'SP' },\n    event_id: '101509157~103116025~103130498',\n\
-  \    timestamp: 1748377016,\n    client_hints: {\n      architecture: 'arm',\n \
-  \     bitness: '64',\n      full_version_list: [\n        { brand: 'Chromium', version:\
-  \ '136.0.7103.93' },\n        { brand: 'Google Chrome', version: '136.0.7103.93'\
-  \ },\n        { brand: 'Not.A/Brand', version: '99.0.0.0' }\n      ],\n      mobile:\
-  \ false,\n      model: '',\n      platform: 'macOS',\n      platform_version: '15.2.0',\n\
-  \      wow64: false,\n      brands: [\n        { brand: 'Chromium', version: '136'\
-  \ },\n        { brand: 'Google Chrome', version: '136' },\n        { brand: 'Not.A/Brand',\
-  \ version: '99' }\n      ]\n    },\n    'x-ga-are': '1',\n    'x-ga-mp2-frm': '0',\n\
-  \    'x-ga-pscdl': 'noapi',\n    'x-ga-system_properties': { eu: [34], tu: 'BA',\
-  \ ss: '1', ee: true },\n    'x-sst-system_properties': {\n      etld: 'google.com.br',\n\
-  \      tft: '1747422523211',\n      lpc: '60493049',\n      navt: 'r',\n      ude:\
-  \ '0',\n      sw_exp: '1',\n      request_start_time_ms: 1747422524851\n    },\n\
-  \    'x-ga-request_count': 1,\n    ga_session_id: '1747422523',\n    ga_session_number:\
-  \ 3,\n    'x-ga-mp2-seg': '0',\n    page_location: 'https://example.com/?test=1i23i21j3',\n\
-  \    page_title: 'Example Domain',\n    event_name: 'page_view',\n    'x-ga-tfd':\
-  \ 5784,\n    ip_override: '2804:14d:c096:8dd6:311c:8c00:e6c:e33',\n    user_agent:\n\
-  \      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,\
-  \ like Gecko) Chrome/136.0.0.0 Safari/537.36',\n    value: 123.45,\n    currency:\
-  \ 'BRL',\n    user_data: {\n      email: { 0: 'test1@example.com', 1: 'test2@example.net'\
-  \ },\n      phone_number: '+55 (19) 99999-9999'\n    }\n  }, objToBeMerged || {}));\n\
-  };\n\nconst expectedBigQuerySettings = {\n  logBigQueryProjectId: 'logBigQueryProjectId',\n\
-  \  logBigQueryDatasetId: 'logBigQueryDatasetId',\n  logBigQueryTableId: 'logBigQueryTableId'\n\
-  };\n\nconst requiredConsoleKeys = ['Type', 'TraceId', 'Name'];\nconst requiredBqKeys\
-  \ = ['timestamp', 'type', 'trace_id', 'tag_name'];\nconst expectedBqOptions = {\
-  \ ignoreUnknownValues: true };\n\nconst expectedEventName = 'Page_View';\nconst\
-  \ expectedConnectionId = 'expectedConnectionId';\nconst expectedAuthToken = 'expectedAuthToken';\n\
-  const expectedActionSource = 'WEB';\n\nconst mockData = {\n  connectionId: expectedConnectionId,\n\
-  \  authToken: expectedAuthToken,\n  eventType: 'standard',\n  eventNameStandard:\
-  \ expectedEventName,\n  actionSource: expectedActionSource,\n  logBigQueryProjectId:\
-  \ expectedBigQuerySettings.logBigQueryProjectId,\n  logBigQueryDatasetId: expectedBigQuerySettings.logBigQueryDatasetId,\n\
-  \  logBigQueryTableId: expectedBigQuerySettings.logBigQueryTableId,\n};\n\nconst\
-  \ setAllMockData = (objToBeMerged) => {\n  mergeObj(mockData, \n    mergeObj({\n\
-  \      adStorageConsent: 'optional',\n      logType: 'debug',\n      eventNameStandard:\
-  \ 'Page_View',\n      deviceIdCookieHttpOnly: false,\n      optOutTargeting: true,\n\
-  \      generateDeviceIdCookie: true,\n      deviceIdCookieExpiration: '365',\n \
-  \     eventType: 'standard',\n      eventDetailsParametersList: [\n        { name:\
-  \ 'amount', value: '123' },\n        { name: 'currency', value: 'BRL' },\n     \
-  \   { name: 'content_name', value: 'foobar' },\n        { name: 'content_category',\
-  \ value: '2271' }\n      ],\n      actionSource: 'WEB',\n      useOptimisticScenario:\
-  \ false,\n      bigQueryLogType: 'no',\n      serverEventDataList: [\n        {\
-  \ name: 'event_time', value: '1748369212323' },\n        { name: 'event_id', value:\
-  \ 'foobar' },\n        { name: 'event_source_url', value: 'https://example.com'\
-  \ }\n      ],\n      deviceIdCookieDomain: 'auto',\n      userDataParametersList:\
-  \ [\n        { name: 'ip_address', value: '1.1.1.1' },\n        { name: 'device_id',\
-  \ value: 'foobar' },\n        { name: 'hashed_emails', value: 'test@example.com'\
-  \ },\n        { name: 'hashed_phone_number', value: '+55 19 9-9999-9999' }\n   \
-  \   ]\n    }, objToBeMerged || {})\n  );\n};\n\nmock('sendHttpRequest', (requestUrl,\
-  \ callback, requestOptions, requestBody) => {\n  if (typeof callback === 'function')\
-  \ {\n    callback(200);\n  } else {\n    requestBody = requestOptions;\n    requestOptions\
-  \ = callback;\n    return Promise.create((resolve, reject) => {\n      resolve({\
-  \ statusCode: 200 });\n    });  \n  }\n});\n\nmock('getRequestHeader', (header)\
-  \ => {\n  if (header === 'trace-id') return 'expectedTraceId';\n});\n\nmock('getTimestampMillis',\
-  \ 1747945830456);"
+- name: '[Response] Calls gtmOnSuccess for 2xx status codes'
+  code: |-
+    setGetAllEventData();
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      callback(201);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Response] Calls gtmOnFailure for non-2xx status codes'
+  code: |-
+    setGetAllEventData();
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      callback(500);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasNotCalled();
+    assertApi('gtmOnFailure').wasCalled();
+- name: '[Optimistic Scenario] Calls gtmOnSuccess immediately without waiting for
+    the response'
+  code: |-
+    setGetAllEventData();
+    mockData.useOptimisticScenario = true;
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      // Intentionally never invokes callback, simulating a response that never arrives.
+    });
+
+    runCode(mockData);
+
+    assertApi('sendHttpRequest').wasCalled();
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Validation] Calls gtmOnFailure when required Common Parameters are missing'
+  code: |-
+    setGetAllEventData();
+
+    mockData.serverEventDataList = [{ name: 'event_name', value: undefined }, { name: 'event_time', value: undefined }];
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasNotCalled();
+    assertApi('gtmOnFailure').wasCalled();
+    assertApi('sendHttpRequest').wasNotCalled();
+- name: '[Validation] Calls gtmOnFailure when required User Data Parameters are missing'
+  code: |-
+    setGetAllEventData();
+
+    mockData.userDataObject = {
+      ip_address: undefined,
+      device_id: undefined,
+      hashed_emails: undefined,
+      hashed_phone_number: undefined
+    };
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasNotCalled();
+    assertApi('gtmOnFailure').wasCalled();
+    assertApi('sendHttpRequest').wasNotCalled();
+- name: '[Validation] Succeeds when only Email is present among User Data Parameters'
+  code: |-
+    setGetAllEventData();
+
+    mockData.userDataObject = {
+      ip_address: undefined,
+      device_id: undefined,
+      hashed_emails: ['onlyemail@example.com'],
+      hashed_phone_number: undefined
+    };
+    mockData.generateDeviceIdCookie = false;
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Validation] Succeeds when only Hashed Phone Number is present among User
+    Data Parameters'
+  code: |-
+    setGetAllEventData();
+
+    mockData.userDataObject = {
+      ip_address: undefined,
+      device_id: undefined,
+      hashed_emails: undefined,
+      hashed_phone_number: '+15551234567'
+    };
+    mockData.generateDeviceIdCookie = false;
+
+    mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+      callback(200);
+    });
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasCalled();
+    assertApi('gtmOnFailure').wasNotCalled();
+- name: '[Validation] Calls gtmOnFailure when hashed_emails array contains only invalid
+    values'
+  code: |-
+    setGetAllEventData();
+
+    mockData.userDataObject = {
+      ip_address: undefined,
+      device_id: undefined,
+      hashed_emails: [undefined, ''],
+      hashed_phone_number: undefined
+    };
+    mockData.generateDeviceIdCookie = false;
+
+    runCode(mockData);
+
+    assertApi('gtmOnSuccess').wasNotCalled();
+    assertApi('gtmOnFailure').wasCalled();
+    assertApi('sendHttpRequest').wasNotCalled();
+setup: |-
+  const JSON = require('JSON');
+  const makeInteger = require('makeInteger');
+
+  const mergeObj = (target, source) => {
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) target[key] = source[key];
+    }
+    return target;
+  };
+
+  const setGetAllEventData = (objToBeMerged) => {
+    mock('getAllEventData', () => mergeObj({
+      'x-ga-protocol_version': '2',
+      'x-ga-measurement_id': 'G-123ABC',
+      'x-ga-gtm_version': '45je55e1za200',
+      'x-ga-page_id': 1747422523211,
+      'x-ga-gcd': '13l3l3l3l1l1',
+      'x-ga-npa': '0',
+      'x-ga-dma': '0',
+      client_id: 'AUJctU7H7hBB/aMuhE4pKwGu5DWDdklg5abyyyn8i/I=.1747154479',
+      'x-ga-ecid': '1294673677',
+      language: 'en-us',
+      screen_resolution: '1512x982',
+      event_location: { country: 'BR', region: 'SP' },
+      event_id: '101509157~103116025~103130498',
+      timestamp: 1748377016,
+      'x-ga-are': '1',
+      'x-ga-mp2-frm': '0',
+      'x-ga-pscdl': 'noapi',
+      page_location: 'https://example.com/?test=1i23i21j3',
+      page_title: 'Example Domain',
+      event_name: 'page_view',
+      ip_override: '2804:14d:c096:8dd6:311c:8c00:e6c:e33',
+      user_agent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+      value: 123.45,
+      currency: 'BRL',
+      user_data: {
+        email: { 0: 'test1@example.com', 1: 'test2@example.net' },
+        phone_number: '+55 (19) 99999-9999'
+      }
+    }, objToBeMerged || {}));
+  };
+
+  const expectedEventName = 'Page_View';
+  const expectedConnectionId = 'expectedConnectionId';
+  const expectedAuthToken = 'expectedAuthToken';
+  const expectedActionSource = 'WEB';
+
+  const mockData = {
+    connectionId: expectedConnectionId,
+    authToken: expectedAuthToken,
+    eventType: 'standard',
+    eventNameStandard: expectedEventName,
+    actionSource: expectedActionSource,
+    adStorageConsent: 'optional',
+    useOptimisticScenario: false
+  };
+
+  const setAllMockData = (objToBeMerged) => {
+    mergeObj(mockData,
+      mergeObj({
+        deviceIdCookieHttpOnly: false,
+        optOutTargeting: true,
+        generateDeviceIdCookie: true,
+        deviceIdCookieExpiration: '365',
+        eventDetailsParametersList: [
+          { name: 'amount', value: '123' },
+          { name: 'currency', value: 'BRL' },
+          { name: 'content_name', value: 'foobar' },
+          { name: 'content_category', value: '2271' }
+        ],
+        serverEventDataList: [
+          { name: 'event_time', value: '1748369212323' },
+          { name: 'event_id', value: 'foobar' },
+          { name: 'event_source_url', value: 'https://example.com' }
+        ],
+        deviceIdCookieDomain: 'auto',
+        userDataParametersList: [
+          { name: 'ip_address', value: '1.1.1.1' },
+          { name: 'device_id', value: 'foobar' },
+          { name: 'hashed_emails', value: 'test@example.com' },
+          { name: 'hashed_phone_number', value: '+55 19 9-9999-9999' }
+        ]
+      }, objToBeMerged || {})
+    );
+  };
+
+  mock('sendHttpRequest', (requestUrl, callback, requestOptions, requestBody) => {
+    callback(200);
+  });
+
+  mock('getCookieValues', () => []);
+
+  mock('computeEffectiveTldPlusOne', () => 'example.com');
+
+  mock('getRequestHeader', (header) => {
+    if (header === 'trace-id') return 'expectedTraceId';
+  });
+
+  mock('getTimestampMillis', 1747945830456);
 
 
 ___NOTES___
+
+2026-09-04 - Change Notes:
+  - Add third_party_source stape to every request body to identify events sent through Stape's Conversions API integration
+  - Add Automap checkboxes to the Server Event Data, Event Details Parameters and User Data sections, enabled by default so existing setups keep working, letting users disable automatic mapping from event data
+  - Resolve the auto-generated Device ID cookie domain via computeEffectiveTldPlusOne instead of a fixed fallback, improving accuracy across subdomains
+  - Fix a bug that could crash the tag instead of sending the request when only an email (no IP address or Device ID) was available in User Data
 
 2026-08-24 Change Notes:
  - Updated template logo.

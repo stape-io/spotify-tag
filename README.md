@@ -2,7 +2,7 @@
 
 The **Spotify Conversions API Tag** allows you to send web and app events from your server container to Spotify Ads using the [Spotify Conversions API](https://adshelp.spotify.com/s/article/Spotify-Conversions-API-US?language=en_US). This tag supports event deduplication, user identification, rich event details, consent handling, and automatic device ID generation when needed.
 
-> ⚠️ **Note**: As of May 2025, the Spotify Conversions API is in **beta**. This means the API is still under active development, and changes from Spotify's side may lead to **unexpected behavior** or **breaking changes**. We recommend testing thoroughly and monitoring your implementation regularly. This tag template may also be updated in response to upstream changes.
+> ⚠️ **Note**: As of September 2026, the Spotify Conversions API is in **beta**. This means the API is still under active development, and changes from Spotify's side may lead to **unexpected behavior** or **breaking changes**. We recommend testing thoroughly and monitoring your implementation regularly. This tag template may also be updated in response to upstream changes.
 
 ## How to Use
 
@@ -14,6 +14,7 @@ The **Spotify Conversions API Tag** allows you to send web and app events from y
    - **Custom**: select a custom event name. Ads Manager supports up to 5 custom events.
 4. Configure optional **Event Details Parameters** (e.g., `Value`, `Currency`, `Content Name`).
 5. Add **User Data Parameters** like `email`, `phone`, `IP address`, and `device ID`. Emails and phone numbers will be hashed automatically if not already hashed.
+   - Each of the **Server Event Data**, **Event Details Parameters**, and **User Data Parameters** sections has an **Automap** checkbox (enabled by default) that automatically maps matching fields from your event data. Disable it if you want to provide values manually only; a manually entered parameter always overrides the auto-mapped value.
 6. (Optional) Enable automatic **Device ID cookie generation** to persist identifiers across sessions.
 7. (Optional) Enable **Consent Settings** to only send data if marketing consent is granted.
 
@@ -32,6 +33,7 @@ The **Spotify Conversions API Tag** allows you to send web and app events from y
 
 - **Event name mapping**: Map GA4-style names to Spotify’s standard event names automatically.
 - **User data enrichment**: Merge user data from cookies, event fields, or UI input.
+- **Automap toggles**: Turn off automatic mapping from event data for Server Event Data, Event Details, or User Data independently (each enabled by default).
 - **Automatic hashing**: Emails and phone numbers are SHA256-hashed if needed.
 - **Device ID cookie generation**: Automatically generates and stores `__spdt` or `__pdst` cookies.
 - **Custom parameters**: Add custom server event or event details parameters.
